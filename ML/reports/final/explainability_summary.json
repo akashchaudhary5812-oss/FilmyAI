@@ -1,0 +1,53 @@
+{
+  "top_classification_features": {
+    "lead_actor_prior_success_rate": 1.1340327221509199,
+    "release_year_norm": 1.0591399943552349,
+    "has_budget_info": 1.0215897750463399,
+    "has_known_writers": 0.8430284702209346,
+    "pgenre_music": 0.7470170294763427,
+    "genre_biography": 0.7222973526295261,
+    "pgenre_romance": 0.6901504169443222,
+    "director_rating": 0.6860509213376306,
+    "genre_history": 0.6381672586427607,
+    "pgenre_thriller": 0.636475976580528,
+    "pgenre_adventure": 0.6329882274563245,
+    "pgenre_fantasy": 0.6228276363590548,
+    "genre_sport": 0.6107262303011574,
+    "pgenre_horror": 0.5917519496578085,
+    "has_known_director": 0.5724665638921577
+  },
+  "top_regression_features": {
+    "director_rating": 0.08434943854808807,
+    "director_composite_score": 0.055405206978321075,
+    "avg_cast_rating": 0.0519389770925045,
+    "is_sequel": 0.038650382310152054,
+    "known_actors_count": 0.035041406750679016,
+    "pgenre_comedy": 0.029810180887579918,
+    "star_power_composite": 0.027846626937389374,
+    "pgenre_action": 0.02773151360452175,
+    "lead_actor_rating": 0.02745664492249489,
+    "genre_action": 0.026611514389514923,
+    "is_q4": 0.026245074346661568,
+    "lead_actor_prior_success_rate": 0.02563474327325821,
+    "is_q2": 0.022635484114289284,
+    "genre_war": 0.021522291004657745,
+    "director_prior_success_rate": 0.020901180803775787
+  },
+  "top_permutation_features": {
+    "avg_cast_rating": 0.1848426877736781,
+    "director_rating": 0.10558011306427964,
+    "lead_actor_rating": 0.05732365604410922,
+    "is_sequel": 0.05445680062897702,
+    "cast_google_hits": 0.018784055011127343,
+    "lead_actor_prior_movies": 0.009178392490728582,
+    "director_google_hits": 0.005555797029085596,
+    "star_power_composite": 0.0051548719005728326,
+    "genre_romance": 0.0036747759692380088,
+    "director_prior_movies": 0.003563219854998767,
+    "genre_count": 0.003178012212148984,
+    "is_q2": 0.0025105932677880194,
+    "is_q3": 0.0014457144851186654,
+    "release_month": 0.0013337486806303978,
+    "pgenre_action": 0.0012549181878213412
+  }
+}

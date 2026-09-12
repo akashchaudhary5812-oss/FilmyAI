@@ -1,0 +1,32 @@
+paths:
+  raw_data_dir: "ML/data/raw"
+  interim_data_dir: "ML/data/interim"
+  processed_data_dir: "ML/data/processed"
+  models_dir: "ML/models"
+  reports_dir: "ML/reports"
+
+datasets:
+  imdb_ott: "yashmotiani/imdb-ott-platforms-movies-power-bi-dashboard"
+  bollywood_actress: "bhanupratapbiswas/bollywood-actress-name-and-movie-list"
+  bollywood_movies: "mitesh58/bollywood-movie-dataset"
+
+random_seed: 42
+
+temporal_split:
+  train_end_year: 2016
+  val_end_year: 2019
+  # test_year: 2020+
+
+target:
+  classification_classes:
+    - "Flop"
+    - "Average"
+    - "Hit"
+    - "Super Hit"
+  classification_target_col: "commercial_success_class"
+  regression_target_col: "box_office_revenue"
+
+training:
+  n_splits: 4
+  scoring_classification: "f1_weighted"
+  scoring_regression: "neg_root_mean_squared_error"

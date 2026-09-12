@@ -1,0 +1,84 @@
+# FILMY AI - Video & Cinematography Intelligence Configuration
+
+project:
+  name: "FilmyAI-Video-Engine"
+  version: "2.0.0"
+  workspace_root: "ML_VIDEO"
+
+datasets:
+  types_of_film_shots:
+    hf_id: "szymonrucinski/types-of-film-shots"
+    num_classes: 8
+    classes:
+      - "ambiguous"
+      - "closeUp"
+      - "detail"
+      - "extremeLongShot"
+      - "fullShot"
+      - "longShot"
+      - "mediumCloseUp"
+      - "mediumShot"
+  shotbench:
+    hf_id: "Vchitect/ShotBench"
+    license: "Apache-2.0"
+    categories:
+      - "shot_size"
+      - "camera_angle"
+      - "camera_movement"
+      - "composition"
+      - "lighting"
+  movienet:
+    source: "OpenDataLab/MovieNet"
+    annotations_path: "datasets/movienet/annotations"
+    num_movies: 1100
+  ava_speech:
+    url: "https://research.google.com/ava/download/ava_speech_labels_v1.csv"
+    classes:
+      - "NO_SPEECH"
+      - "CLEAN_SPEECH"
+      - "SPEECH_WITH_MUSIC"
+      - "SPEECH_WITH_NOISE"
+
+models:
+  shot_scale:
+    architecture: "efficientnet_b0"
+    pretrained: true
+    num_classes: 8
+    img_size: 224
+    learning_rate: 0.0003
+    weight_decay: 0.0001
+    dropout: 0.3
+    epochs: 15
+    batch_size: 32
+  cinematography_multitask:
+    backbone: "efficientnet_b0"
+    img_size: 224
+    tasks:
+      shot_size: 6
+      camera_angle: 5
+      camera_movement: 6
+      composition: 4
+      lighting: 4
+    learning_rate: 0.0003
+    epochs: 20
+    batch_size: 32
+  speech_classifier:
+    feature_type: "mfcc_spectral"
+    n_mfcc: 20
+    n_classes: 4
+    hidden_dim: 128
+    learning_rate: 0.001
+    epochs: 25
+    batch_size: 64
+
+segmentation:
+  detector: "content"
+  threshold: 27.0
+  min_scene_len_seconds: 1.0
+  keyframe_strategy: "middle_and_peak"
+
+inference:
+  chunk_duration_seconds: 30
+  device_preference: "cuda"
+  fallback_to_cpu: true
+  export_json: true

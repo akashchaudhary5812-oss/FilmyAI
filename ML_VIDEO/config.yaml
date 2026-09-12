@@ -1,0 +1,43 @@
+paths:
+  raw_data_dir: "ML_VIDEO/data/raw"
+  interim_data_dir: "ML_VIDEO/data/interim"
+  processed_data_dir: "ML_VIDEO/data/processed"
+  models_dir: "ML_VIDEO/models"
+  reports_dir: "ML_VIDEO/reports"
+
+datasets:
+  shotqa:
+    repo_id: "Vchitect/ShotQA"
+    url: "https://huggingface.co/datasets/Vchitect/ShotQA"
+    license: "CC-BY-NC-4.0 / Research"
+  finevideo:
+    repo_id: "HuggingFaceFV/finevideo"
+    url: "https://huggingface.co/datasets/HuggingFaceFV/finevideo"
+    license: "Apache 2.0"
+  ava:
+    url: "https://research.google.com/ava/download/ava_train_v2.2.csv"
+    license: "CC-BY-4.0"
+  movienet:
+    url: "https://movienet.github.io/"
+    license: "Research Only"
+
+random_seed: 42
+
+training:
+  batch_size: 32
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  epochs: 10
+  shot_scale_classes:
+    - "Extreme Close-Up (ECU)"
+    - "Close-Up (CU)"
+    - "Medium Close-Up (MCU)"
+    - "Medium Shot (MS)"
+    - "Full Shot (FS)"
+    - "Long Shot (LS)"
+  camera_movement_classes:
+    - "Static"
+    - "Pan"
+    - "Tilt"
+    - "Zoom"
+    - "Tracking / Dolly"

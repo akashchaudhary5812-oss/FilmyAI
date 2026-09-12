@@ -1,0 +1,204 @@
+# =========================================================
+# FILMY AI - ROOT .gitignore
+# =========================================================
+
+# -------------------------
+# Environment / Secrets
+# -------------------------
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# -------------------------
+# Node.js
+# -------------------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# -------------------------
+# Build / Distribution
+# -------------------------
+dist/
+build/
+out/
+.next/
+.nuxt/
+coverage/
+
+# -------------------------
+# Uploaded / Temporary Files
+# -------------------------
+uploads/
+upload/
+tmp/
+temp/
+temporary/
+*.tmp
+
+# Video / Audio files
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.mpeg
+*.mpg
+*.wav
+*.mp3
+*.flac
+*.aac
+
+# Images generated temporarily
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+
+# -------------------------
+# ML Datasets
+# -------------------------
+# Ignore large raw/interim datasets
+ML/data/raw/
+ML/data/interim/
+ML/data/processed/
+
+ML_VIDEO/data/raw/
+ML_VIDEO/data/interim/
+ML_VIDEO/data/processed/
+
+ML_VIDEO/datasets/
+
+# If you intentionally want to keep small metadata/manifests:
+!ML/reports/
+!ML_VIDEO/reports/
+
+# -------------------------
+# ML Model Checkpoints
+# -------------------------
+# Large trained model files
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.safetensors
+*.h5
+*.keras
+*.joblib
+*.pkl
+
+# Ignore model directories by default
+ML/models/
+ML_VIDEO/models/
+
+# Keep metadata / documentation if tracked
+!ML/models/model_metadata.json
+!ML_VIDEO/models/video_model_metadata.json
+
+# -------------------------
+# Generated Reports
+# -------------------------
+generated_reports/
+LLM_FINAL_REPORT/generated_reports/
+
+*.pdf
+
+# -------------------------
+# Logs
+# -------------------------
+*.log
+logs/
+log/
+
+# -------------------------
+# OS Files
+# -------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -------------------------
+# IDE / Editor
+# -------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*.code-workspace
+
+# -------------------------
+# Local configuration
+# -------------------------
+config.local.*
+config.*.local
+*.local
+
+# -------------------------
+# Database / Local Storage
+# -------------------------
+*.db
+*.sqlite
+*.sqlite3
+
+# -------------------------
+# Cache
+# -------------------------
+.cache/
+.pytest_cache/
+.mplconfig/
+huggingface/
+.huggingface/
+
+# -------------------------
+# Temporary ML artifacts
+# -------------------------
+wandb/
+mlruns/
+runs/
+tensorboard/
+checkpoints/
+artifacts/
+
+# -------------------------
+# Secrets / Credentials
+# -------------------------
+*.pem
+*.key
+*.crt
+credentials.json
+service-account.json
+
+# -------------------------
+# Misc
+# -------------------------
+.DS_Store
+*.bak
+*.orig

@@ -1,0 +1,40 @@
+{
+  "model_name": "FilmSpeechClassifier",
+  "dataset": "Google AVA Speech Labels v1.0",
+  "test_accuracy": 0.9992,
+  "test_macro_precision": 0.9989,
+  "test_macro_recall": 0.9993,
+  "test_macro_f1": 0.9991,
+  "confusion_matrix": [
+    [
+      2684,
+      0,
+      1,
+      1
+    ],
+    [
+      0,
+      943,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      763,
+      0
+    ],
+    [
+      1,
+      2,
+      0,
+      1587
+    ]
+  ],
+  "classes": [
+    "NO_SPEECH",
+    "CLEAN_SPEECH",
+    "SPEECH_WITH_MUSIC",
+    "SPEECH_WITH_NOISE"
+  ]
+}

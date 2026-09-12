@@ -1,0 +1,95 @@
+{
+  "project": "FILMY AI - Film Video Intelligence Engine",
+  "verification_timestamp": "2026-09-11T22:03:00Z",
+  "compliance": "100% Verified Real Data - 0% Synthetic Data",
+  "datasets": [
+    {
+      "dataset_name": "types-of-film-shots",
+      "official_url": "https://huggingface.co/datasets/szymonrucinski/types-of-film-shots",
+      "download_status": "success",
+      "license": "Public / Research",
+      "total_samples": 863,
+      "usable_samples": 863,
+      "split": {
+        "train": 604,
+        "validation": 129,
+        "test": 130
+      },
+      "local_path": "ML_VIDEO/data/raw/types_of_film_shots",
+      "classes": [
+        "ambiguous",
+        "closeUp",
+        "detail",
+        "extremeLongShot",
+        "fullShot",
+        "longShot",
+        "mediumCloseUp",
+        "mediumShot"
+      ]
+    },
+    {
+      "dataset_name": "MovieNet",
+      "official_url": "https://opendatalab.com/OpenDataLab/MovieNet",
+      "download_status": "success",
+      "license": "Academic / Non-commercial Research",
+      "archive_size_bytes": 887328768,
+      "archive_size_mb": 846.22,
+      "total_movies": 1100,
+      "total_annotation_files": 8918,
+      "total_cinematic_style_shots": 13204,
+      "total_scene_segments": 45385,
+      "total_character_bounding_boxes": 2004099,
+      "local_path": "ML_VIDEO/datasets/movienet",
+      "shot_scale_distribution": {
+        "closeup": 6713,
+        "medium": 3535,
+        "full": 2075,
+        "extreme_closeup": 703,
+        "long": 178
+      },
+      "camera_movement_distribution": {
+        "static": 8665,
+        "moving": 3759,
+        "push": 552,
+        "pull": 55,
+        "multi_movement": 173
+      }
+    },
+    {
+      "dataset_name": "ShotBench",
+      "official_url": "https://huggingface.co/datasets/Vchitect/ShotBench",
+      "download_status": "success",
+      "license": "Apache-2.0",
+      "archive_size_bytes": 2169733120,
+      "archive_size_mb": 2069.22,
+      "total_qa_pairs": 3572,
+      "total_keyframes": 3050,
+      "local_path": "ML_VIDEO/datasets/shotbench",
+      "categories": {
+        "lens size": 489,
+        "shot size": 485,
+        "composition": 479,
+        "camera movement": 464,
+        "camera angle": 455,
+        "shot framing": 445,
+        "lighting type": 405,
+        "lighting": 350
+      }
+    },
+    {
+      "dataset_name": "Google AVA Speech Labels v1.0",
+      "official_url": "https://research.google.com/ava/download/ava_speech_labels_v1.csv",
+      "download_status": "success",
+      "license": "Creative Commons Attribution 4.0",
+      "total_segments": 39874,
+      "usable_segments": 39874,
+      "local_path": "ML_VIDEO/datasets/ava/ava_speech_labels_v1.csv",
+      "classes": {
+        "NO_SPEECH": 17624,
+        "SPEECH_WITH_NOISE": 10506,
+        "CLEAN_SPEECH": 6433,
+        "SPEECH_WITH_MUSIC": 5311
+      }
+    }
+  ]
+}
