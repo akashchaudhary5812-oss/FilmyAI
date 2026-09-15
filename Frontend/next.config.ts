@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Disable the development-only segment explorer in Next 15.5. It can
+    // generate an invalid React client manifest during hot reload.
+    devtoolSegmentExplorer: false,
+  },
   images: {
     remotePatterns: [
       {

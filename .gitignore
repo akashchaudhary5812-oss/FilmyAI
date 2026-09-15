@@ -9,6 +9,13 @@
 .env.*
 !.env.example
 !.env.sample
+.envrc
+
+# Service-specific local configuration (share privately when needed)
+Backend/.env
+Frontend/.env.local
+Frontend/.env.development.local
+Frontend/.env.production.local
 
 # -------------------------
 # Python
@@ -193,8 +200,16 @@ artifacts/
 *.pem
 *.key
 *.crt
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.secret
+*.secrets
+*.token
 credentials.json
 service-account.json
+.aws/
 
 # -------------------------
 # Misc

@@ -45,6 +45,9 @@ export function MovieHero({ movie }: MovieHeroProps) {
     );
   }
 
+  const synopsis = movie.summary?.replace(/\s+/g, " ").trim() ||
+    `A high-caliber production with a verified budget of ${movie.budget}. Evaluated by the Filmy AI neural engine for market reach and creative execution.`;
+
   return (
     <div className="relative w-full h-[70vh] min-h-[520px] max-h-[720px] overflow-hidden select-none bg-cinematic-950">
       {/* Background Media Backdrop */}
@@ -106,9 +109,11 @@ export function MovieHero({ movie }: MovieHeroProps) {
           </div>
 
           {/* Synopsis */}
-          <p className="text-sm sm:text-base text-slate-300 line-clamp-3 leading-relaxed drop-shadow">
-            {movie.summary ||
-              `A high-caliber production with a verified budget of ${movie.budget}. Evaluated by the Filmy AI neural engine for market reach and creative execution.`}
+          <p
+            className="max-w-xl text-sm sm:text-base text-slate-300 line-clamp-3 drop-shadow"
+            style={{ lineHeight: "1.75rem" }}
+          >
+            {synopsis}
           </p>
 
           {/* CTA Action Buttons */}

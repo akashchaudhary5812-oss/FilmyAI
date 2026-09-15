@@ -7,13 +7,22 @@ import { Button } from "../ui/Button";
 interface DropzoneProps {
   selectedFile: File | null;
   onFileSelect: (file: File | null) => void;
+  onFileError: (message: string) => void;
   progress?: number;
   isUploading?: boolean;
+}
+
+const ACCEPTED_VIDEO_EXTENSIONS = ["mp4", "mov", "webm", "avi", "mkv", "mpeg", "mpg"];
+
+function isAcceptedVideo(file: File) {
+  const extension = file.name.split(".").pop()?.toLowerCase();
+  return file.type.startsWith("video/") && !!extension && ACCEPTED_VIDEO_EXTENSIONS.includes(extension);
 }
 
 export function Dropzone({
   selectedFile,
   onFileSelect,
+  onFileError,
   progress = 0,
   isUploading = false,
 }: DropzoneProps) {
@@ -33,14 +42,25 @@ export function Dropzone({
     e.preventDefault();
     setIsDragOver(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      onFileSelect(e.dataTransfer.files[0]);
+      selectVideoFile(e.dataTransfer.files[0]);
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      onFileSelect(e.target.files[0]);
+      selectVideoFile(e.target.files[0]);
     }
+    e.target.value = "";
+  };
+
+  const selectVideoFile = (file: File) => {
+    if (!isAcceptedVideo(file)) {
+      onFileSelect(null);
+      onFileError("Only video files are allowed. Please select an MP4, MOV, WEBM, AVI, MKV, or MPEG video.");
+      return;
+    }
+    onFileError("");
+    onFileSelect(file);
   };
 
   const formatFileSize = (bytes: number) => {
@@ -54,7 +74,7 @@ export function Dropzone({
       <input
         ref={fileInputRef}
         type="file"
-        accept="video/*,image/*"
+        accept="video/mp4,video/quicktime,video/webm,video/x-msvideo,video/x-matroska,video/mpeg"
         onChange={handleFileChange}
         className="hidden"
       />
@@ -75,10 +95,10 @@ export function Dropzone({
             <UploadCloud className="w-7 h-7" />
           </div>
           <h3 className="text-base font-semibold text-white font-display">
-            Drop Film Reel or Artwork Here
+            Drop a Film Video Here
           </h3>
           <p className="text-xs text-slate-400 mt-1 mb-4">
-            Supports MP4, MOV, WEBM videos or high-resolution keyframe posters (up to 500MB)
+            Videos only: MP4, MOV, WEBM, AVI, MKV, or MPEG (up to 500MB)
           </p>
           <Button type="button" variant="secondary" size="sm">
             Browse Studio Files
@@ -96,7 +116,7 @@ export function Dropzone({
                   {selectedFile.name}
                 </h4>
                 <p className="text-xs text-slate-400">
-                  {formatFileSize(selectedFile.size)} • {selectedFile.type || "Video/Media"}
+                  {formatFileSize(selectedFile.size)} • {selectedFile.type || "Video"}
                 </p>
               </div>
             </div>

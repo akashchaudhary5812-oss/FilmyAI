@@ -42,7 +42,7 @@ export function FilmUploadForm() {
     setError("");
 
     if (!filmFile) {
-      setError("Please attach a film video clip or keyframe artwork.");
+      setError("Please attach a film video file.");
       return;
     }
 
@@ -91,11 +91,12 @@ export function FilmUploadForm() {
       {/* Media Ingestion Box */}
       <div className="space-y-2">
         <label className="block text-xs font-mono uppercase tracking-wider text-slate-300">
-          Film Video Reel or Studio Keyframe Artwork <span className="text-gold-400">*</span>
+          Film Video File <span className="text-gold-400">*</span>
         </label>
         <Dropzone
           selectedFile={filmFile}
           onFileSelect={setFilmFile}
+          onFileError={setError}
           progress={uploadProgress}
           isUploading={isUploading}
         />

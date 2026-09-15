@@ -16,17 +16,15 @@ export const authApi = {
    * POST /api/auth/login
    */
   async login(payload: LoginPayload): Promise<{ message: string; token: string; user?: User }> {
-    const response = await apiClient.post<{ message: string; token: string }>("/api/auth/login", payload);
+    const response = await apiClient.post<{ message: string; token: string; user?: { _id: string; username: string; email: string } }>("/api/auth/login", payload);
     const { token, message } = response.data;
 
     if (token && typeof window !== "undefined") {
       localStorage.setItem("filmy_auth_token", token);
-      // Construct basic user info from payload email
-      const user: User = {
-        id: "usr_" + btoa(payload.email).substring(0, 10),
-        email: payload.email,
-        username: payload.email.split("@")[0],
-      };
+      const serverUser = response.data.user;
+      const user: User = serverUser
+        ? { id: serverUser._id, email: serverUser.email, username: serverUser.username }
+        : { id: "usr_" + btoa(payload.email).substring(0, 10), email: payload.email, username: payload.email.split("@")[0] };
       localStorage.setItem("filmy_user_profile", JSON.stringify(user));
       return { message, token, user };
     }
