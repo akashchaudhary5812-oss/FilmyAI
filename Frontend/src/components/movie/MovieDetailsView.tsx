@@ -16,12 +16,15 @@ import {
   Building,
   FileText,
   AlertTriangle,
+  Play,
+  Tv,
 } from "lucide-react";
 import { Movie } from "@/types/movie";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { movieApi } from "@/lib/api/movies";
 import { useAuth } from "@/context/AuthContext";
+import { useWatchProgress } from "@/hooks/useWatchProgress";
 
 interface MovieDetailsViewProps {
   movie: Movie;
@@ -30,6 +33,7 @@ interface MovieDetailsViewProps {
 export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
+  const { currentProgress } = useWatchProgress(movie.id);
   const [isSaved, setIsSaved] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
@@ -74,19 +78,13 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
     <div className="min-h-screen bg-cinematic-950 pb-20">
       {/* Hero Media Section */}
       <div className="relative w-full h-[55vh] min-h-[420px] bg-cinematic-900 overflow-hidden">
-        {isVideo ? (
-          <video
-            src={movie.posterUrl}
-            controls
-            className="w-full h-full object-cover"
-          />
-        ) : movie.backdropUrl && !imageError ? (
+        {movie.backdropUrl && !imageError ? (
           <Image
             src={movie.backdropUrl}
             alt={movie.title}
             fill
             priority
-            className="object-cover filter brightness-75 contrast-110"
+            className="object-cover filter brightness-70 contrast-110"
             onError={() => setImageError(true)}
           />
         ) : (
@@ -97,6 +95,37 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
 
         {/* Gradient overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-cinematic-950 via-cinematic-950/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-cinematic-950/90 via-cinematic-950/40 to-transparent" />
+
+        {/* Prime Video & Netflix Style Play Hero Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <Link
+            href={`/watch/${movie.id}`}
+            className="flex items-center gap-3 px-6 py-3.5 rounded-full bg-gold-500 hover:bg-gold-400 text-cinematic-950 font-black text-sm tracking-wide shadow-2xl shadow-gold-500/30 backdrop-blur-md transform hover:scale-105 transition-all group"
+          >
+            <div className="w-8 h-8 rounded-full bg-cinematic-950 text-gold-400 flex items-center justify-center">
+              <Play className="w-4 h-4 fill-gold-400 ml-0.5" />
+            </div>
+            <span>
+              {currentProgress && currentProgress.progressPercent > 5
+                ? `Resume Playback (${Math.max(1, Math.round((currentProgress.durationSeconds - currentProgress.progressSeconds) / 60))}m left)`
+                : "Watch Movie in Theater"}
+            </span>
+          </Link>
+        </div>
+
+        {/* Cinema Tech Spec Badges in Corner */}
+        <div className="absolute top-6 right-6 z-20 hidden md:flex items-center gap-2">
+          <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-black/60 border border-white/20 text-slate-200 backdrop-blur-md">
+            4K ULTRA HD
+          </span>
+          <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-black/60 border border-white/20 text-slate-200 backdrop-blur-md">
+            HDR10+
+          </span>
+          <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-black/60 border border-gold-500/40 text-gold-400 backdrop-blur-md">
+            5.1 SURROUND
+          </span>
+        </div>
       </div>
 
       {/* Main Content Container */}
@@ -124,8 +153,22 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
 
             {/* Action Buttons */}
             <div className="space-y-3 max-w-sm mx-auto">
+              <Link href={`/watch/${movie.id}`} className="block">
+                <Button
+                  variant="primary"
+                  className="w-full py-3.5 text-base bg-gold-500 hover:bg-gold-400 text-cinematic-950 font-black shadow-lg shadow-gold-500/25"
+                >
+                  <Play className="w-5 h-5 fill-cinematic-950 mr-2" />
+                  <span>
+                    {currentProgress && currentProgress.progressPercent > 5
+                      ? "Resume Playback"
+                      : "Watch Movie Now"}
+                  </span>
+                </Button>
+              </Link>
+
               <Link href={`/film-report/${movie.id}`} className="block">
-                <Button variant="primary" className="w-full py-3.5 text-base">
+                <Button variant="neural" className="w-full py-3 text-sm">
                   <Sparkles className="w-4 h-4 mr-2" />
                   View AI Film Intelligence
                 </Button>

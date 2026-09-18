@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { movieApi } from "@/lib/api/movies";
 import { FilmGenre } from "@/types/movie";
 import { MovieGrid } from "@/components/movie/MovieGrid";
+import { ContinueWatchingCarousel } from "@/components/movie/ContinueWatchingCarousel";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { Clapperboard } from "lucide-react";
 
@@ -54,6 +55,9 @@ export default function MoviesCatalogPage() {
           Browse verified studio features, screenplays, and multimodal analysis reports across all genres.
         </p>
       </div>
+
+      {/* Netflix / Prime Video Continue Watching Row */}
+      <ContinueWatchingCarousel />
 
       {/* Genre Filter Pills */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">

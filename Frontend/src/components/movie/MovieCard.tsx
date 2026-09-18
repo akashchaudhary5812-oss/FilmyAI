@@ -3,9 +3,10 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Star, Sparkles, Film, ArrowRight } from "lucide-react";
+import { Star, Sparkles, Film, ArrowRight, Play } from "lucide-react";
 import { Movie } from "@/types/movie";
 import { Badge } from "../ui/Badge";
+import { useWatchProgress } from "@/hooks/useWatchProgress";
 
 interface MovieCardProps {
   movie: Movie;
@@ -14,6 +15,7 @@ interface MovieCardProps {
 
 export function MovieCard({ movie, priority = false }: MovieCardProps) {
   const [imageError, setImageError] = useState(false);
+  const { currentProgress } = useWatchProgress(movie.id);
 
   // Fallback poster background with nice film typography if image is missing or broken
   const fallbackBg =
@@ -68,38 +70,63 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
         </div>
 
         {/* Cinematic Hover Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-cinematic-950 via-cinematic-950/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 z-20">
-          <h4 className="text-base font-bold text-white font-display line-clamp-1 mb-1">
-            {movie.title}
-          </h4>
-
-          <div className="text-xs text-slate-400 mb-2">
-            <span>Dir: {movie.director}</span>
-            {movie.year && <span> • {movie.year}</span>}
+        <div className="absolute inset-0 bg-gradient-to-t from-cinematic-950 via-cinematic-950/85 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-4 z-20">
+          {/* Quick Play Circle Icon in Top Center on Hover */}
+          <div className="flex justify-center pt-8">
+            <Link
+              href={`/watch/${movie.id}`}
+              className="w-12 h-12 rounded-full bg-gold-500 hover:bg-gold-400 text-cinematic-950 flex items-center justify-center shadow-xl shadow-gold-500/30 transform hover:scale-110 transition-transform cursor-pointer"
+              title="Watch Movie"
+            >
+              <Play className="w-6 h-6 fill-cinematic-950 ml-0.5" />
+            </Link>
           </div>
 
-          <p className="text-xs text-slate-300 line-clamp-2 mb-3 leading-relaxed">
-            {movie.summary || `Starring ${movie.casting}. Produced by ${movie.productionHouses.join(", ") || "Independent"}.`}
-          </p>
+          <div>
+            <h4 className="text-base font-bold text-white font-display line-clamp-1 mb-1">
+              {movie.title}
+            </h4>
 
-          <div className="grid grid-cols-2 gap-2 pt-1 border-t border-white/10">
-            <Link
-              href={`/movies/${movie.id}`}
-              className="flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-100 text-xs font-medium transition-colors"
-            >
-              <span>Details</span>
-              <ArrowRight className="w-3 h-3" />
-            </Link>
+            <div className="text-xs text-slate-400 mb-2">
+              <span>Dir: {movie.director}</span>
+              {movie.year && <span> • {movie.year}</span>}
+            </div>
 
-            <Link
-              href={`/film-report/${movie.id}`}
-              className="flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-cinematic-950 text-xs font-semibold transition-colors shadow-sm shadow-gold-500/20"
-            >
-              <Sparkles className="w-3 h-3" />
-              <span>AI Intel</span>
-            </Link>
+            <p className="text-xs text-slate-300 line-clamp-2 mb-3 leading-relaxed">
+              {movie.summary || `Starring ${movie.casting}. Produced by ${movie.productionHouses.join(", ") || "Independent"}.`}
+            </p>
+
+            <div className="grid grid-cols-2 gap-2 pt-1 border-t border-white/10">
+              <Link
+                href={`/watch/${movie.id}`}
+                className="flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-cinematic-950 text-xs font-bold transition-colors shadow-sm shadow-gold-500/20"
+              >
+                <Play className="w-3 h-3 fill-cinematic-950" />
+                <span>
+                  {currentProgress && currentProgress.progressPercent > 5 ? "Resume" : "Watch"}
+                </span>
+              </Link>
+
+              <Link
+                href={`/movies/${movie.id}`}
+                className="flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-100 text-xs font-medium transition-colors"
+              >
+                <span>Details</span>
+                <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
           </div>
         </div>
+
+        {/* In-Progress Watched Progress Bar Indicator (Netflix style) */}
+        {currentProgress && currentProgress.progressPercent > 0 && (
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60 z-20">
+            <div
+              className="h-full bg-gradient-to-r from-gold-600 via-gold-500 to-amber-300"
+              style={{ width: `${currentProgress.progressPercent}%` }}
+            />
+          </div>
+        )}
       </div>
 
       {/* Card Footer for quick scanning on mobile/desktop without hover */}

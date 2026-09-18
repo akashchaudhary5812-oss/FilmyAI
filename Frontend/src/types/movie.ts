@@ -31,6 +31,7 @@ export interface Movie {
   title: string;
   posterUrl: string;
   backdropUrl: string;
+  videoUrl?: string;
   director: string;
   productionHouses: string[];
   casting: string;
@@ -40,6 +41,19 @@ export interface Movie {
   summary?: string;
   rating?: number;
   year?: number;
+}
+
+export interface WatchHistoryItem {
+  movieId: string;
+  title: string;
+  posterUrl: string;
+  backdropUrl?: string;
+  genre: string;
+  director: string;
+  progressSeconds: number;
+  durationSeconds: number;
+  progressPercent: number;
+  lastWatchedAt: number;
 }
 
 export type VideoInputType = "upload" | "url";

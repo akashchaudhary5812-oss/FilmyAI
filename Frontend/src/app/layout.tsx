@@ -18,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth">
-      <body className="min-h-screen flex flex-col bg-[#07080b] text-slate-100 antialiased selection:bg-gold-500 selection:text-cinematic-950">
+    <html lang="en" className="scroll-smooth">
+      <body className="min-h-screen flex flex-col bg-cinematic-950 text-slate-100 antialiased selection:bg-gold-500 selection:text-cinematic-950">
         <QueryProvider>
           <AuthProvider>
             <Navbar />

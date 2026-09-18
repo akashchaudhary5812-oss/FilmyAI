@@ -6,6 +6,7 @@ import { movieApi } from "@/lib/api/movies";
 import { filterMoviesByGenre } from "@/lib/adapters/movieAdapter";
 import { MovieHero } from "@/components/movie/MovieHero";
 import { MovieCarousel } from "@/components/movie/MovieCarousel";
+import { ContinueWatchingCarousel } from "@/components/movie/ContinueWatchingCarousel";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { useAuth } from "@/context/AuthContext";
@@ -58,6 +59,9 @@ export default function HomePage() {
     <div className="space-y-8 pb-20 overflow-x-hidden">
       {/* Hero Section */}
       <MovieHero movie={heroMovie} />
+
+      {/* Netflix & Prime Video Continue Watching Row */}
+      <ContinueWatchingCarousel />
 
       {/* Main Content Area */}
       {movies.length === 0 ? (

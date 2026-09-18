@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Star, Sparkles, Film, ArrowRight, Clapperboard } from "lucide-react";
+import { Star, Sparkles, Film, ArrowRight, Clapperboard, Play, Info } from "lucide-react";
 import { Movie } from "@/types/movie";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
+import { useWatchProgress } from "@/hooks/useWatchProgress";
 
 interface MovieHeroProps {
   movie?: Movie;
@@ -14,6 +15,7 @@ interface MovieHeroProps {
 
 export function MovieHero({ movie }: MovieHeroProps) {
   const [imageError, setImageError] = useState(false);
+  const { currentProgress } = useWatchProgress(movie?.id);
 
   if (!movie) {
     return (
@@ -121,26 +123,34 @@ export function MovieHero({ movie }: MovieHeroProps) {
             {synopsis}
           </p>
 
-          {/* CTA Action Buttons */}
+          {/* CTA Action Buttons: Netflix & Prime Video inspired */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
+            <Link href={`/watch/${movie.id}`}>
+              <Button
+                variant="primary"
+                size="lg"
+                className="bg-gold-500 hover:bg-gold-400 text-cinematic-950 font-black shadow-xl shadow-gold-500/25 px-6"
+              >
+                <Play className="w-5 h-5 fill-cinematic-950 mr-1.5" />
+                <span>
+                  {currentProgress && currentProgress.progressPercent > 5
+                    ? `Resume (${Math.max(1, Math.round((currentProgress.durationSeconds - currentProgress.progressSeconds) / 60))}m left)`
+                    : "Watch Movie"}
+                </span>
+              </Button>
+            </Link>
+
             <Link href={`/movies/${movie.id}`}>
-              <Button variant="primary" size="lg">
-                <span>View Details</span>
-                <ArrowRight className="w-4 h-4 ml-1" />
+              <Button variant="secondary" size="lg">
+                <Info className="w-4 h-4 mr-1.5" />
+                <span>More Info</span>
               </Button>
             </Link>
 
             <Link href={`/film-report/${movie.id}`}>
               <Button variant="neural" size="lg">
-                <Sparkles className="w-4 h-4 mr-1" />
-                <span>AI Intelligence Report</span>
-              </Button>
-            </Link>
-
-            <Link href="/analyze">
-              <Button variant="outline" size="lg">
-                <Clapperboard className="w-4 h-4 mr-1" />
-                <span>Analyze New Film</span>
+                <Sparkles className="w-4 h-4 mr-1.5" />
+                <span>AI Intel Report</span>
               </Button>
             </Link>
           </div>

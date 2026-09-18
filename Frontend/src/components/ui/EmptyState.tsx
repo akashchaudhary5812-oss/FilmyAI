@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Film, AlertCircle } from "lucide-react";
 import { Button } from "./Button";

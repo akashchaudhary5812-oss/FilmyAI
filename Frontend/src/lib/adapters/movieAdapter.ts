@@ -18,6 +18,7 @@ export function mapBackendMovieToMovie(doc: BackendMovieDoc): Movie {
     title: doc.FilmName || "Untitled Film",
     posterUrl: mediaUrl,
     backdropUrl: mediaUrl,
+    videoUrl: mediaUrl,
     director: doc.DirectorName || "Unknown Director",
     productionHouses: prodHouses,
     casting: doc.Casting || "Not listed",
