@@ -48,10 +48,15 @@ export function MovieHero({ movie }: MovieHeroProps) {
   const synopsis = movie.summary?.replace(/\s+/g, " ").trim() ||
     `A high-caliber production with a verified budget of ${movie.budget}. Evaluated by the Filmy AI neural engine for market reach and creative execution.`;
 
+  const isVideo =
+    typeof movie.backdropUrl === "string" &&
+    (/\.(mp4|webm|mov|mkv|avi)$/i.test(movie.backdropUrl.split("?")[0]) ||
+      movie.backdropUrl.includes("/uploads/videos/"));
+
   return (
     <div className="relative w-full h-[70vh] min-h-[520px] max-h-[720px] overflow-hidden select-none bg-cinematic-950">
       {/* Background Media Backdrop */}
-      {movie.backdropUrl && !imageError ? (
+      {movie.backdropUrl && !isVideo && !imageError ? (
         <div className="absolute inset-0">
           <Image
             src={movie.backdropUrl}

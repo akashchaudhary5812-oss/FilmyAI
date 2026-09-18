@@ -29,6 +29,33 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
         }`}
       >
         <p className="whitespace-pre-wrap">{message.content}</p>
+        
+        {/* Source Citations Badges */}
+        {isAssistant && message.sources && message.sources.length > 0 && (
+          <div className="mt-2.5 pt-2 border-t border-white/10 space-y-1">
+            <span className="text-[9px] font-mono text-amber-400/90 font-semibold block uppercase tracking-wider">
+              Grounded Sources:
+            </span>
+            <div className="flex flex-wrap gap-1">
+              {message.sources.map((src, idx) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center gap-1 text-[9px] font-mono bg-white/5 border border-white/10 text-slate-300 px-1.5 py-0.5 rounded"
+                  title={src.excerpt || `${src.section} > ${src.subsection || ""}`}
+                >
+                  <span className="text-amber-400">§</span>
+                  <span>{src.section}{src.subsection ? ` › ${src.subsection}` : ""}</span>
+                  {src.relevance_score && (
+                    <span className="text-[8px] text-slate-500">
+                      ({Math.round(src.relevance_score * 100)}%)
+                    </span>
+                  )}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         <span
           className={`block text-[9px] mt-1.5 font-mono ${
             isAssistant ? "text-slate-500" : "text-cinematic-900/80"

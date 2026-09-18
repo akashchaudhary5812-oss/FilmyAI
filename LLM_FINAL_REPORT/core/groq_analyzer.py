@@ -103,7 +103,7 @@ class GroqFilmAnalyzer:
         report_id = f"FILMYAI-RPT-{uuid.uuid4().hex[:8].upper()}"
         client = self._get_client()
 
-        candidate_models = [self.model, GROQ_FALLBACK_MODEL, "qwen/qwen3.6-27b"]
+        candidate_models = [self.model, GROQ_FALLBACK_MODEL, "qwen/qwen3.8-27b", "openai/gpt-oss-20b", "groq/compound-mini"]
 
         if client and self.api_key:
             messages = [
@@ -117,8 +117,8 @@ class GroqFilmAnalyzer:
                     completion = client.chat.completions.create(
                         model=model_name,
                         messages=messages,
-                        temperature=0.3,
-                        max_tokens=4096,
+                        temperature=0.2,
+                        max_tokens=2500,
                         response_format={"type": "json_object"}
                     )
 

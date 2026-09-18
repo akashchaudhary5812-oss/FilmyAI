@@ -35,12 +35,11 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // Check if media is a video file by extension
+  // Check if media is a video file by extension or upload path
   const isVideo =
-    movie.posterUrl &&
-    (movie.posterUrl.endsWith(".mp4") ||
-      movie.posterUrl.endsWith(".webm") ||
-      movie.posterUrl.endsWith(".mov"));
+    typeof movie.posterUrl === "string" &&
+    (/\.(mp4|webm|mov|mkv|avi)$/i.test(movie.posterUrl.split("?")[0]) ||
+      movie.posterUrl.includes("/uploads/videos/"));
 
   const toggleBookmark = () => {
     setIsSaved(!isSaved);
@@ -106,7 +105,7 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
           {/* Left Column: Poster & Quick Actions */}
           <div className="lg:col-span-1 space-y-6">
             <div className="relative aspect-[2/3] w-full max-w-sm mx-auto rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-cinematic-900">
-              {movie.posterUrl && !imageError ? (
+              {movie.posterUrl && !isVideo && !imageError ? (
                 <Image
                   src={movie.posterUrl}
                   alt={movie.title}

@@ -66,5 +66,7 @@ class FinalFilmIntelligenceReport(BaseModel):
     key_scene_highlights: List[SceneKeyHighlight] = Field(default_factory=list)
     raw_ml_predictions: Dict[str, Any] = Field(default_factory=dict)
     raw_video_metrics: Dict[str, Any] = Field(default_factory=dict)
+    film_id: Optional[str] = None
     pdf_report_path: Optional[str] = None
     json_report_path: Optional[str] = None
+    rag_indexing_status: Optional[Dict[str, Any]] = None

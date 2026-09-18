@@ -1,5 +1,5 @@
 import React from "react";
-import { Download, Sparkles, Star, Calendar, ShieldCheck } from "lucide-react";
+import { Download, Sparkles, Star, Calendar, ShieldCheck, User, Clapperboard, DollarSign, Tag } from "lucide-react";
 import { FinalFilmIntelligenceReport } from "@/types/report";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
@@ -10,9 +10,19 @@ interface ReportHeaderProps {
 }
 
 export function ReportHeader({ report }: ReportHeaderProps) {
+  const meta = (report.metadata_summary || {}) as {
+    director?: string;
+    actors?: string[];
+    budget?: number;
+    genre?: string;
+    release_year?: number;
+    release_month?: number;
+    is_sequel?: boolean;
+  };
+
   const downloadPdf = () => {
     if (report.pdf_report_path) {
-      const parts = report.pdf_report_path.split("/");
+      const parts = report.pdf_report_path.split(/[\\/]/);
       const filename = parts[parts.length - 1];
       const url = reportApi.getPdfDownloadUrl(filename);
       window.open(url, "_blank");
@@ -27,7 +37,7 @@ export function ReportHeader({ report }: ReportHeaderProps) {
       <div className="absolute top-0 right-0 w-96 h-96 bg-gold-500/5 rounded-full filter blur-3xl pointer-events-none" />
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-        <div className="space-y-3 max-w-2xl">
+        <div className="space-y-3 max-w-3xl">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="gold">Validated Studio Intelligence</Badge>
             <Badge variant="neural">{report.executive_summary?.commercial_tier || "Major Studio Tier"}</Badge>
@@ -49,7 +59,41 @@ export function ReportHeader({ report }: ReportHeaderProps) {
             &ldquo;{report.executive_summary?.logline}&rdquo;
           </p>
 
-          <div className="flex items-center gap-4 text-xs text-slate-400 font-mono">
+          {/* Film Metadata Chips */}
+          <div className="flex flex-wrap items-center gap-2 pt-1 text-xs font-mono text-slate-300">
+            {meta.director && (
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cinematic-950/70 border border-white/5">
+                <User className="w-3.5 h-3.5 text-gold-400" />
+                <span>Dir: <strong className="text-white">{meta.director}</strong></span>
+              </span>
+            )}
+            {meta.genre && (
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cinematic-950/70 border border-white/5">
+                <Tag className="w-3.5 h-3.5 text-neural-400" />
+                <span>Genre: <strong className="text-white">{meta.genre}</strong></span>
+              </span>
+            )}
+            {meta.budget !== undefined && meta.budget > 0 && (
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cinematic-950/70 border border-white/5">
+                <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Budget: <strong className="text-white">${meta.budget.toLocaleString()}</strong></span>
+              </span>
+            )}
+            {meta.release_year && (
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cinematic-950/70 border border-white/5">
+                <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                <span>Release: <strong className="text-white">{meta.release_month ? `${meta.release_month}/` : ""}{meta.release_year}</strong></span>
+              </span>
+            )}
+            {meta.actors && meta.actors.length > 0 && (
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cinematic-950/70 border border-white/5">
+                <Clapperboard className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Cast: <strong className="text-white">{meta.actors.join(", ")}</strong></span>
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-4 text-xs text-slate-400 font-mono pt-1">
             <span className="flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
               Report ID: {report.report_id}
@@ -86,3 +130,4 @@ export function ReportHeader({ report }: ReportHeaderProps) {
     </div>
   );
 }
+

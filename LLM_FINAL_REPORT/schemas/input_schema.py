@@ -11,6 +11,7 @@ class FilmInputRequest(BaseModel):
     Normalized Input Schema for film analysis and final intelligence report generation.
     """
     # Primary identifiers
+    film_id: Optional[str] = Field(None, alias="film_id", description="Unique film ID (MongoDB or UUID)")
     title: str = Field(..., alias="FilmName", description="Film title")
     video_url: Optional[str] = Field(None, alias="uploadFilm", description="URL or local path to video file")
     video_path: Optional[str] = Field(None, description="Local absolute or relative path to video file")

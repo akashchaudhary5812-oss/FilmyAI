@@ -37,6 +37,11 @@ app.get('/health', (req, res) => {
     res.status(200).json({ status: 'ok', service: 'FilmyAI Backend', version: '1.0.0' });
 });
 
+const path = require('path');
+
+// ── Static Files (Local Video Storage & Uploads) ──────────────────────
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // ── Routes ────────────────────────────────────────────────────────────
 app.use('/api/auth', userRoutes);
 app.use('/api/film', UploadFilmRoutes);

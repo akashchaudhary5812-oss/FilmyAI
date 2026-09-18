@@ -1,19 +1,16 @@
 "use client";
 
-import React, { use } from "react";
+import React from "react";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { movieApi } from "@/lib/api/movies";
 import { MovieDetailsView } from "@/components/movie/MovieDetailsView";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ErrorState } from "@/components/ui/EmptyState";
-import { useRouter } from "next/navigation";
 
-export default function MovieDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const resolvedParams = use(params);
+export default function MovieDetailsPage() {
+  const urlParams = useParams();
+  const filmId = (urlParams?.id as string) || "";
   const router = useRouter();
 
   const {
@@ -23,8 +20,9 @@ export default function MovieDetailsPage({
     error,
     refetch,
   } = useQuery({
-    queryKey: ["movie-details", resolvedParams.id],
-    queryFn: () => movieApi.getMovieDetails(resolvedParams.id),
+    queryKey: ["movie-details", filmId],
+    queryFn: () => movieApi.getMovieDetails(filmId),
+    enabled: Boolean(filmId),
   });
 
   if (isLoading) {

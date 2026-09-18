@@ -1,6 +1,7 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { movieApi } from "@/lib/api/movies";
 import { reportApi } from "@/lib/api/reports";
@@ -16,16 +17,13 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { ErrorState } from "@/components/ui/EmptyState";
 import { normalizeReport } from "@/lib/adapters/reportAdapter";
 
-export default function FilmReportPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const resolvedParams = use(params);
-  const filmId = resolvedParams.id;
+export default function FilmReportPage() {
+  const urlParams = useParams();
+  const filmId = (urlParams?.id as string) || "";
 
   const [report, setReport] = useState<FinalFilmIntelligenceReport | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isFetchingReport, setIsFetchingReport] = useState(true);
+  const [reportError, setReportError] = useState<string | null>(null);
 
   // Fetch movie details from backend
   const {
@@ -40,72 +38,89 @@ export default function FilmReportPage({
   });
 
   useEffect(() => {
-    // Check if session storage already holds this report
-    if (typeof window !== "undefined") {
-      const cached = sessionStorage.getItem(`filmy_report_${filmId}`);
-      if (cached) {
-        try {
-          const parsed = JSON.parse(cached);
-          setReport(normalizeReport(parsed));
+    let isMounted = true;
+
+    async function loadReport() {
+      setIsFetchingReport(true);
+      setReportError(null);
+
+      // 1. Try to fetch genuine report from backend DB
+      try {
+        const dbReport = await reportApi.getFilmReport(filmId);
+        if (isMounted) {
+          setReport(dbReport);
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem(`filmy_report_${filmId}`, JSON.stringify(dbReport));
+          }
+          setIsFetchingReport(false);
           return;
-        } catch {
-          // If parse fails, regenerate
+        }
+      } catch (err: unknown) {
+        console.log("[FilmReport] Backend DB report not yet ready or fetch failed:", err);
+      }
+
+      // 2. Check session storage as fast cache
+      if (typeof window !== "undefined") {
+        const cached = sessionStorage.getItem(`filmy_report_${filmId}`);
+        if (cached) {
+          try {
+            const parsed = JSON.parse(cached);
+            if (isMounted) {
+              setReport(normalizeReport(parsed));
+              setIsFetchingReport(false);
+              return;
+            }
+          } catch (_) {}
         }
       }
-    }
 
-    // If movie is loaded and report not in session, generate from report API
-    if (movie) {
-      let isMounted = true;
-      setIsGenerating(true);
+      // 3. Fallback: If movie is loaded, trigger direct generation
+      if (movie) {
+        try {
+          const generated = await reportApi.generateReport({
+            film_id: filmId,
+            FilmName: movie.title,
+            uploadFilm: movie.posterUrl,
+            DirectorName: movie.director,
+            Casting: movie.casting,
+            ProductionHouses: movie.productionHouses.join(", "),
+            Budget: movie.budget,
+            Genre: movie.genre,
+            Script: movie.script,
+            Summary: movie.summary,
+            generate_pdf: true,
+          });
 
-      reportApi
-        .generateReport({
-          FilmName: movie.title,
-          uploadFilm: movie.posterUrl,
-          DirectorName: movie.director,
-          Casting: movie.casting,
-          ProductionHouses: movie.productionHouses.join(", "),
-          Budget: movie.budget,
-          Genre: movie.genre,
-          Script: movie.script,
-          Summary: movie.summary,
-          generate_pdf: true,
-        })
-        .then((generated) => {
           if (isMounted) {
             setReport(generated);
             if (typeof window !== "undefined") {
               sessionStorage.setItem(`filmy_report_${filmId}`, JSON.stringify(generated));
             }
           }
-        })
-        .catch((err) => {
-          console.warn("Report generation error:", err);
+        } catch (genErr: unknown) {
           if (isMounted) {
-            setReport(
-              normalizeReport({
-                film_title: movie.title,
-                metadata_summary: {
-                  director: movie.director,
-                  casting: movie.casting,
-                  genre: movie.genre,
-                },
-              })
+            setReportError(
+              genErr instanceof Error
+                ? genErr.message
+                : "Unable to retrieve or generate film report."
             );
           }
-        })
-        .finally(() => {
-          if (isMounted) setIsGenerating(false);
-        });
-
-      return () => {
-        isMounted = false;
-      };
+        } finally {
+          if (isMounted) setIsFetchingReport(false);
+        }
+      } else {
+        if (isMounted) setIsFetchingReport(false);
+      }
     }
-  }, [movie, filmId]);
 
-  if (isMovieLoading || (isGenerating && !report)) {
+    loadReport();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [filmId, movie]);
+
+  if (isMovieLoading || (isFetchingReport && !report)) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
         <Skeleton className="w-full h-48 rounded-3xl" />
@@ -127,7 +142,7 @@ export default function FilmReportPage({
     return (
       <div className="max-w-xl mx-auto px-4 py-20">
         <ErrorState
-          title="Film Report Unavailable"
+          title="Film Unavailable"
           message={movieError instanceof Error ? movieError.message : "Unable to retrieve film metadata."}
           onRetry={() => refetchMovie()}
         />
@@ -139,9 +154,9 @@ export default function FilmReportPage({
     return (
       <div className="max-w-xl mx-auto px-4 py-20">
         <ErrorState
-          title="Intelligence Generation Failed"
-          message="Could not generate the film intelligence report."
-          onRetry={() => refetchMovie()}
+          title="Intelligence Report Generating or Unavailable"
+          message={reportError || "The analysis pipeline is still processing or encountered an issue. Please verify in the processing monitor."}
+          onRetry={() => window.location.reload()}
         />
       </div>
     );

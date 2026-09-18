@@ -42,8 +42,11 @@ export interface Movie {
   year?: number;
 }
 
+export type VideoInputType = "upload" | "url";
+
 export interface FilmUploadPayload {
-  filmFile: File;
+  filmFile?: File | null;
+  videoUrl?: string;
   filmName: string;
   directorName: string;
   productionHouses: string;

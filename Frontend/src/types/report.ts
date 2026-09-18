@@ -60,6 +60,8 @@ export interface FinalFilmIntelligenceReport {
   key_scene_highlights: SceneKeyHighlight[];
   raw_ml_predictions: Record<string, unknown>;
   raw_video_metrics: Record<string, unknown>;
+  film_id?: string;
   pdf_report_path?: string;
   json_report_path?: string;
+  rag_indexing_status?: Record<string, unknown>;
 }

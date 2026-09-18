@@ -19,11 +19,16 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
   const fallbackBg =
     "linear-gradient(135deg, #131722 0%, #1c2236 50%, #0d0f17 100%)";
 
+  const isVideo =
+    typeof movie.posterUrl === "string" &&
+    (/\.(mp4|webm|mov|mkv|avi)$/i.test(movie.posterUrl.split("?")[0]) ||
+      movie.posterUrl.includes("/uploads/videos/"));
+
   return (
     <div className="group relative flex-shrink-0 w-44 sm:w-56 md:w-64 rounded-xl overflow-hidden bg-cinematic-900 border border-white/10 transition-all duration-300 hover:scale-[1.03] hover:border-gold-500/50 hover:shadow-2xl hover:shadow-gold-500/10 select-none">
       {/* Aspect ratio container (2:3 poster format) */}
       <div className="relative aspect-[2/3] w-full overflow-hidden bg-cinematic-950">
-        {movie.posterUrl && !imageError ? (
+        {movie.posterUrl && !isVideo && !imageError ? (
           <Image
             src={movie.posterUrl}
             alt={movie.title}

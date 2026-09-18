@@ -19,6 +19,11 @@ from LLM_FINAL_REPORT.core.evidence_normalizer import EvidenceNormalizer
 from LLM_FINAL_REPORT.core.groq_analyzer import GroqFilmAnalyzer
 from LLM_FINAL_REPORT.pdf_generator.report_builder import FilmReportPDFBuilder
 
+try:
+    from RAG.rag_pipeline import rag_pipeline
+except Exception as _e:
+    rag_pipeline = None
+
 
 class FilmyAIReportPipeline:
     """
@@ -124,6 +129,8 @@ class FilmyAIReportPipeline:
         # ----------------------------------------------------
         timestamp_slug = time.strftime("%Y%m%d_%H%M%S")
         prefix = request.output_filename_prefix or self._sanitize_filename(request.title)
+        effective_film_id = request.film_id or prefix
+        report.film_id = effective_film_id
         
         json_path = self.output_dir / f"{prefix}_{timestamp_slug}_report.json"
         pdf_path = self.output_dir / f"{prefix}_{timestamp_slug}_report.pdf"
@@ -143,9 +150,31 @@ class FilmyAIReportPipeline:
             print(f"[Pipeline] Saved PDF Report: {pdf_path}")
 
         # ----------------------------------------------------
-        # Step 17: Return Final Result
+        # Step 17: Automatic RAG Ingestion into FAISS Knowledge Base
+        # ----------------------------------------------------
+        print("[Pipeline] Step 17: Automatic Ingestion of Validated Report into RAG Knowledge Base...")
+        try:
+            if rag_pipeline:
+                rag_result = rag_pipeline.ingest_film_report(
+                    film_id=effective_film_id,
+                    report_id=report.report_id,
+                    report=report
+                )
+                report.rag_indexing_status = rag_result
+                if rag_result.get("success"):
+                    print(f"[Pipeline] [RAG] Indexing Successful ({rag_result.get('chunk_count', 0)} chunks indexed)")
+                else:
+                    print(f"[Pipeline] [RAG] Indexing reported failure: {rag_result.get('error')}")
+            else:
+                report.rag_indexing_status = {"success": False, "status": "RAG_MODULE_UNAVAILABLE"}
+        except Exception as rag_err:
+            print(f"[Pipeline] [RAG] Warning: Ingestion encountered error: {rag_err}")
+            report.rag_indexing_status = {"success": False, "status": "FAILED", "error": str(rag_err)}
+
+        # ----------------------------------------------------
+        # Complete
         # ----------------------------------------------------
         elapsed = round(time.time() - start_time, 2)
-        print(f"[Pipeline] Step 17: Report Pipeline successfully completed in {elapsed}s!")
+        print(f"[Pipeline] Report Pipeline and RAG Ingestion successfully completed in {elapsed}s!")
         print("========================================================\n")
         return report

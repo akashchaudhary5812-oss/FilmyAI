@@ -12,6 +12,7 @@ WORKSPACE_ROOT = REPORT_MODULE_DIR.parent
 
 # Attempt loading environment variables from potential .env locations
 ENV_CANDIDATES = [
+    WORKSPACE_ROOT / "RAG" / ".env",
     WORKSPACE_ROOT / "Backend" / ".env",
     WORKSPACE_ROOT / "backend" / ".env",
     WORKSPACE_ROOT / ".env",
@@ -22,7 +23,10 @@ for env_path in ENV_CANDIDATES:
     if env_path.exists():
         load_dotenv(dotenv_path=env_path, override=False)
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "").strip()
+GROQ_API_KEY = (
+    os.getenv("GROQ_LLM_API_KEY", "").strip() or
+    os.getenv("GROQ_API_KEY", "").strip()
+)
 GROQ_DEFAULT_MODEL = os.getenv("GROQ_REPORT_MODEL", "openai/gpt-oss-120b")
 GROQ_FALLBACK_MODEL = os.getenv("GROQ_FALLBACK_MODEL", "openai/gpt-oss-20b")
 

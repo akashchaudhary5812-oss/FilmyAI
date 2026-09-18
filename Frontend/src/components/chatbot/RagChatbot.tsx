@@ -22,6 +22,7 @@ export function RagChatbot({ report }: RagChatbotProps) {
     },
   ]);
 
+  const [conversationId] = useState(() => `conv_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`);
   const [isLoading, setIsLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true); // For mobile collapse
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -54,7 +55,9 @@ export function RagChatbot({ report }: RagChatbotProps) {
 
     try {
       const response = await chatbotApi.askQuestion({
+        film_id: report.film_id || report.report_id || report.film_title?.replace(/[^a-zA-Z0-9_-]/g, "_"),
         filmTitle: report.film_title,
+        conversation_id: conversationId,
         reportContext: report as unknown as Record<string, unknown>,
         query: text,
         history: messages,

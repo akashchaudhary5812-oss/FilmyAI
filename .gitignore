@@ -13,6 +13,8 @@
 
 # Service-specific local configuration (share privately when needed)
 Backend/.env
+RAG/.env
+RAG/storage/
 Frontend/.env.local
 Frontend/.env.development.local
 Frontend/.env.production.local

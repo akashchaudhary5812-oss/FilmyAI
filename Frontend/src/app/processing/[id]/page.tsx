@@ -1,18 +1,16 @@
 "use client";
 
-import React, { use } from "react";
+import React from "react";
+import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { movieApi } from "@/lib/api/movies";
 import { ProcessingVisualizer } from "@/components/analysis/ProcessingVisualizer";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ErrorState } from "@/components/ui/EmptyState";
 
-export default function ProcessingPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const resolvedParams = use(params);
+export default function ProcessingPage() {
+  const urlParams = useParams();
+  const filmId = (urlParams?.id as string) || "";
 
   const {
     data: movie,
@@ -21,8 +19,9 @@ export default function ProcessingPage({
     error,
     refetch,
   } = useQuery({
-    queryKey: ["movie-processing", resolvedParams.id],
-    queryFn: () => movieApi.getMovieDetails(resolvedParams.id),
+    queryKey: ["movie-processing", filmId],
+    queryFn: () => movieApi.getMovieDetails(filmId),
+    enabled: Boolean(filmId),
   });
 
   if (isLoading) {

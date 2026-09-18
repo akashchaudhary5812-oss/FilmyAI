@@ -4,6 +4,7 @@ Allows Node.js backend or any external client to invoke report generation over R
 """
 import sys
 from pathlib import Path
+from pydantic import BaseModel, Field
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,10 +19,12 @@ from LLM_FINAL_REPORT.config import API_HOST, API_PORT, REPORTS_OUTPUT_DIR
 from LLM_FINAL_REPORT.schemas.input_schema import FilmInputRequest
 from LLM_FINAL_REPORT.schemas.report_schema import FinalFilmIntelligenceReport
 from LLM_FINAL_REPORT.pipeline import FilmyAIReportPipeline
+from ML_VIDEO.src.preprocessing.video_resolver import VideoResolver, VideoResolutionError
+from RAG.api import router as rag_router
 
 app = FastAPI(
     title="FILMY AI — Film Intelligence & Report API",
-    description="Multimodal Integration and Studio Report Generator connecting ML & ML_VIDEO engines.",
+    description="Multimodal Integration, Studio Report Generator, and RAG QA System connecting ML & ML_VIDEO engines.",
     version="1.0.0"
 )
 
@@ -33,7 +36,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(rag_router)
+
 pipeline = FilmyAIReportPipeline()
+video_resolver = VideoResolver()
+
+
+class ValidateUrlRequest(BaseModel):
+    url: str = Field(..., description="Public/authorized video URL to probe and validate")
 
 
 @app.get("/health")
@@ -43,6 +53,44 @@ def health_check():
         "service": "FilmyAI LLM Final Report Pipeline",
         "version": "1.0.0"
     }
+
+
+@app.post("/api/v1/validate-video-url")
+def validate_video_url(req: ValidateUrlRequest):
+    """
+    Validates accessibility, MIME type, and size of a remote video URL.
+    Used by frontend for immediate URL verification before submission.
+    """
+    try:
+        video_resolver.validate_url_syntax(req.url)
+        probe_info = video_resolver.probe_url(req.url)
+        return {
+            "valid": True,
+            "status": "VIDEO_READY",
+            "message": "Video resource is valid and accessible.",
+            "content_type": probe_info.get("content_type"),
+            "content_length_bytes": probe_info.get("content_length"),
+            "extension": probe_info.get("extension"),
+        }
+    except VideoResolutionError as vre:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "valid": False,
+                "status": vre.stage,
+                "message": vre.message,
+                "error_type": vre.__class__.__name__,
+            }
+        )
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "valid": False,
+                "status": "VALIDATING_URL",
+                "message": f"Unexpected validation error: {str(e)}",
+            }
+        )
 
 
 @app.post("/api/v1/generate-report", response_model=FinalFilmIntelligenceReport)

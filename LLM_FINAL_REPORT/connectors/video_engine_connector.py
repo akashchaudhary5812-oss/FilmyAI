@@ -1,11 +1,10 @@
 """
 Connector for the existing Multimodal Video Intelligence Engine (ML_VIDEO/).
 Interfaces with ML_VIDEO.src.inference.video_analyzer.FilmyAIVideoEngine.
+Uses the unified VideoResolver to handle both local uploads and remote URLs cleanly.
 """
 import os
 import sys
-import tempfile
-import requests
 from pathlib import Path
 from typing import Dict, Any, Optional
 
@@ -16,14 +15,22 @@ from LLM_FINAL_REPORT.schemas.evidence_schema import VideoCinematographyEvidence
 if str(WORKSPACE_ROOT) not in sys.path:
     sys.path.insert(0, str(WORKSPACE_ROOT))
 
+from ML_VIDEO.src.preprocessing.video_resolver import (
+    VideoResolver,
+    ResolvedVideo,
+    VideoResolutionError
+)
+
 
 class VideoEngineConnector:
     """
     Safely connects to and executes multimodal video intelligence analysis using ML_VIDEO.
+    Normalizes local paths and public video URLs into a unified video interface.
     """
     def __init__(self):
         self._engine = None
         self._init_error = None
+        self.resolver = VideoResolver(temp_dir=TEMP_DIR)
 
     def _get_engine(self):
         if self._engine is None and self._init_error is None:
@@ -35,43 +42,6 @@ class VideoEngineConnector:
                 print(f"[VideoEngineConnector] Warning: Failed to initialize FilmyAIVideoEngine: {e}")
         return self._engine
 
-    def _resolve_video_file(self, video_path: Optional[str], video_url: Optional[str]) -> Optional[Path]:
-        """
-        Resolves local path or downloads remote video URL to a local temporary file.
-        """
-        # 1. Direct local path
-        target = video_path or video_url
-        if not target:
-            return None
-
-        local_p = Path(target)
-        if local_p.exists() and local_p.is_file():
-            return local_p
-
-        # Also check relative to workspace root
-        ws_p = WORKSPACE_ROOT / target
-        if ws_p.exists() and ws_p.is_file():
-            return ws_p
-
-        # 2. Remote URL download
-        if isinstance(target, str) and (target.startswith("http://") or target.startswith("https://")):
-            try:
-                print(f"[VideoEngineConnector] Downloading video from URL: {target}")
-                TEMP_DIR.mkdir(parents=True, exist_ok=True)
-                ext = Path(target.split("?")[0]).suffix or ".mp4"
-                temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=ext, dir=TEMP_DIR)
-                with requests.get(target, stream=True, timeout=60) as r:
-                    r.raise_for_status()
-                    for chunk in r.iter_content(chunk_size=8192):
-                        temp_file.write(chunk)
-                temp_file.close()
-                return Path(temp_file.name)
-            except Exception as e:
-                print(f"[VideoEngineConnector] Error downloading video from URL: {e}")
-                return None
-
-        return None
-
     def analyze(
         self,
         video_path: Optional[str] = None,
@@ -80,25 +50,54 @@ class VideoEngineConnector:
         max_duration_sec: Optional[float] = None
     ) -> VideoCinematographyEvidence:
         """
-        Runs ML_VIDEO intelligence analysis on the provided video.
+        Resolves video input (local file or remote URL) and executes ML_VIDEO analysis.
+        Automatically cleans up temporary cached files after analysis completes.
         """
-        resolved_video = self._resolve_video_file(video_path, video_url)
-        if resolved_video is None or not resolved_video.exists():
+        target = video_path or video_url
+        if not target:
             return VideoCinematographyEvidence(
                 status="not_available",
-                error_message="Valid video file could not be located or downloaded from input."
+                error_message="No video file or URL provided for analysis."
             )
 
-        engine = self._get_engine()
-        if engine is None:
-            return VideoCinematographyEvidence(
-                status="failed",
-                error_message=f"ML_VIDEO Engine initialization error: {self._init_error}"
-            )
-
+        resolved_video: Optional[ResolvedVideo] = None
         try:
+            # 1. Resolve Video target (Local file or remote URL)
+            try:
+                resolved_video = self.resolver.resolve(target)
+            except VideoResolutionError as vre:
+                print(f"[VideoEngineConnector] Video resolution error: {vre}")
+                is_missing = "not found" in str(vre).lower() or "not a video" in str(vre).lower()
+                status_str = "not_available" if is_missing else "failed"
+                err_msg = "Valid video file could not be located or downloaded from input." if is_missing else f"Video resolution failed ({vre.stage}): {vre.message}"
+                return VideoCinematographyEvidence(
+                    status=status_str,
+                    error_message=err_msg
+                )
+            except Exception as e:
+                print(f"[VideoEngineConnector] Unexpected resolution error: {e}")
+                return VideoCinematographyEvidence(
+                    status="failed",
+                    error_message=f"Failed to resolve video input: {str(e)}"
+                )
+
+            if not resolved_video.path.exists():
+                return VideoCinematographyEvidence(
+                    status="not_available",
+                    error_message="Valid video file could not be located on disk."
+                )
+
+            # 2. Get ML_VIDEO engine
+            engine = self._get_engine()
+            if engine is None:
+                return VideoCinematographyEvidence(
+                    status="failed",
+                    error_message=f"ML_VIDEO Engine initialization error: {self._init_error}"
+                )
+
+            # 3. Execute ML_VIDEO Multimodal Analysis
             report = engine.analyze_video(
-                video_path=str(resolved_video),
+                video_path=str(resolved_video.path),
                 keyframe_dir=keyframe_dir,
                 max_duration_sec=max_duration_sec
             )
@@ -131,7 +130,7 @@ class VideoEngineConnector:
             return VideoCinematographyEvidence(
                 status="available",
                 engine_version=report.get("version", "2.0.0"),
-                video_source=meta.get("source_file", resolved_video.name),
+                video_source=meta.get("source_file", resolved_video.path.name),
                 duration_seconds=meta.get("duration_seconds", 0.0),
                 resolution=meta.get("resolution", "N/A"),
                 aspect_ratio=meta.get("aspect_ratio", "N/A"),
@@ -154,3 +153,7 @@ class VideoEngineConnector:
                 status="failed",
                 error_message=f"ML_VIDEO analysis failed: {str(e)}"
             )
+        finally:
+            # Deterministic cleanup of temporary downloaded videos
+            if resolved_video:
+                resolved_video.cleanup()
