@@ -154,20 +154,31 @@ class FilmyAIPredictor:
             success_prob = 1.0 if class_idx >= 2 else 0.0
             confidence = 0.75
             
-        commercial_score = float(self.reg_model.predict(X_raw)[0])
+        try:
+            if hasattr(self.reg_model, "feature_names_in_"):
+                commercial_score = float(self.reg_model.predict(X_raw)[0])
+            else:
+                X_scaled = self.preprocessor.transform(X_raw)
+                commercial_score = float(self.reg_model.predict(X_scaled)[0])
+        except Exception:
+            commercial_score = float(self.reg_model.predict(X_raw)[0])
+            
         commercial_score = max(1.0, min(9.0, commercial_score)) # Clamp between 1.0 and 9.0
         
         # Determine top contributing factors
         factors = []
-        if X_raw["lead_actor_rating"].iloc[0] > 6.0:
+        star_score = min(10.0, float(X_raw["lead_actor_rating"].iloc[0]))
+        dir_score = min(10.0, float(X_raw["director_rating"].iloc[0]))
+        
+        if star_score > 6.0:
             factors.append({
                 "factor": "Lead Actor Star Power",
-                "impact": f"High positive impact from lead star power (rating: {X_raw['lead_actor_rating'].iloc[0]:.1f}/10)"
+                "impact": f"High positive impact from lead star power (rating: {star_score:.1f}/10)"
             })
-        if X_raw["director_rating"].iloc[0] > 6.0:
+        if dir_score > 6.0:
             factors.append({
                 "factor": "Director Historical Track Record",
-                "impact": f"Strong positive driver from director credibility (rating: {X_raw['director_rating'].iloc[0]:.1f}/10)"
+                "impact": f"Strong positive driver from director credibility (rating: {dir_score:.1f}/10)"
             })
         if X_raw["is_sequel"].iloc[0] == 1:
             factors.append({
@@ -185,6 +196,16 @@ class FilmyAIPredictor:
                 "impact": "No extraordinary star-power or franchise multipliers detected"
             })
             
+        meta_file = self.models_dir / "model_metadata.json"
+        version_str = "2.0.0-filmyai-ml"
+        if meta_file.exists():
+            try:
+                with open(meta_file, "r") as mf:
+                    meta_data = json.load(mf)
+                    version_str = meta_data.get("version", version_str)
+            except:
+                pass
+                
         return {
             "title": payload.get("title", "Untitled Film"),
             "predicted_class": class_name,
@@ -195,7 +216,7 @@ class FilmyAIPredictor:
             "commercial_score_scale": "1.0 (Disaster) to 9.0 (Historic Blockbuster)",
             "class_probabilities": {k: round(v, 4) for k, v in prob_dict.items()},
             "important_factors": factors,
-            "model_version": "1.0.0-filmyai-ml"
+            "model_version": version_str
         }
 
 if __name__ == "__main__":

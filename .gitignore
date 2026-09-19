@@ -70,6 +70,7 @@ upload/
 tmp/
 temp/
 temporary/
+scratch/
 *.tmp
 
 # Video / Audio files
