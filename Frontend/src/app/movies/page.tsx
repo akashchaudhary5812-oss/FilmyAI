@@ -44,7 +44,7 @@ export default function MoviesCatalogPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Header */}
       <div className="space-y-2">
-        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-gold-400">
+        <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-netflix-400">
           <Clapperboard className="w-4 h-4" />
           <span>Production Archives</span>
         </div>
@@ -60,7 +60,7 @@ export default function MoviesCatalogPage() {
       <ContinueWatchingCarousel />
 
       {/* Genre Filter Pills */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 pt-1">
         {genres.map((g) => {
           const isActive = selectedGenre === g;
           return (
@@ -69,8 +69,8 @@ export default function MoviesCatalogPage() {
               onClick={() => setSelectedGenre(g)}
               className={`px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer ${
                 isActive
-                  ? "bg-gold-500 text-cinematic-950 shadow-md shadow-gold-500/20"
-                  : "bg-cinematic-900 text-slate-300 hover:text-white hover:bg-cinematic-800 border border-white/10"
+                  ? "bg-netflix-500 text-white shadow-md shadow-netflix-500/30"
+                  : "bg-cinematic-900 text-slate-300 hover:text-white hover:bg-cinematic-850 border border-cinematic-700"
               }`}
             >
               {g}

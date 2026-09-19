@@ -37,7 +37,7 @@ export default function WatchMoviePage() {
   if (isLoading) {
     return (
       <div className="w-full h-screen bg-cinematic-950 flex flex-col items-center justify-center space-y-4">
-        <div className="w-12 h-12 border-4 border-gold-500/30 border-t-gold-400 rounded-full animate-spin" />
+        <div className="w-12 h-12 border-4 border-netflix-500/30 border-t-netflix-500 rounded-full animate-spin" />
         <div className="text-center space-y-1">
           <p className="text-sm font-bold text-white font-display tracking-wide">
             Loading Cinema Theater...
@@ -69,7 +69,7 @@ export default function WatchMoviePage() {
             </Link>
             <button
               onClick={() => refetch()}
-              className="px-4 py-2 rounded-xl bg-gold-500 hover:bg-gold-400 text-cinematic-950 text-xs font-bold transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-netflix-500 hover:bg-netflix-400 text-white text-xs font-bold transition-colors cursor-pointer"
             >
               Retry
             </button>

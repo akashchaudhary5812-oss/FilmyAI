@@ -499,11 +499,11 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
       {/* Center Animated Feedback Ripple */}
       {centerRipple && (
         <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-gold-400 shadow-2xl animate-pingOnce">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shadow-2xl animate-pingOnce">
             {centerRipple === "play" ? (
-              <Play className="w-10 h-10 fill-gold-400 ml-1.5" />
+              <Play className="w-10 h-10 fill-white ml-1.5" />
             ) : (
-              <Pause className="w-10 h-10 fill-gold-400" />
+              <Pause className="w-10 h-10 fill-white" />
             )}
           </div>
         </div>
@@ -513,18 +513,18 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
       {skipRipple === "rewind" && (
         <div className="absolute top-1/2 left-12 -translate-y-1/2 z-20 pointer-events-none flex flex-col items-center animate-pulse">
           <div className="w-16 h-16 rounded-full bg-black/70 flex items-center justify-center text-white border border-white/20">
-            <RotateCcw className="w-8 h-8 text-gold-400" />
+            <RotateCcw className="w-8 h-8 text-white" />
           </div>
-          <span className="text-xs font-bold font-mono text-gold-400 mt-2">-10 sec</span>
+          <span className="text-xs font-bold font-mono text-white mt-2">-10 sec</span>
         </div>
       )}
 
       {skipRipple === "forward" && (
         <div className="absolute top-1/2 right-12 -translate-y-1/2 z-20 pointer-events-none flex flex-col items-center animate-pulse">
           <div className="w-16 h-16 rounded-full bg-black/70 flex items-center justify-center text-white border border-white/20">
-            <RotateCw className="w-8 h-8 text-gold-400" />
+            <RotateCw className="w-8 h-8 text-white" />
           </div>
-          <span className="text-xs font-bold font-mono text-gold-400 mt-2">+10 sec</span>
+          <span className="text-xs font-bold font-mono text-white mt-2">+10 sec</span>
         </div>
       )}
 
@@ -532,8 +532,8 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
       {isBuffering && (
         <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
           <div className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-black/70 backdrop-blur-md border border-white/10">
-            <div className="w-10 h-10 border-4 border-gold-500/30 border-t-gold-400 rounded-full animate-spin" />
-            <span className="text-xs font-mono text-gold-400 tracking-wider uppercase">
+            <div className="w-10 h-10 border-4 border-netflix-500/30 border-t-netflix-500 rounded-full animate-spin" />
+            <span className="text-xs font-mono text-slate-200 tracking-wider uppercase">
               Buffering Cinema Stream...
             </span>
           </div>
@@ -542,10 +542,10 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
 
       {/* Resume from timestamp banner */}
       {showResumeBanner && resumedTime && (
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 z-40 bg-cinematic-900/90 border border-gold-500/40 backdrop-blur-lg px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 text-xs animate-slideDown">
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 z-40 bg-cinematic-900/95 border border-cinematic-700 backdrop-blur-lg px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 text-xs animate-slideDown">
           <span className="text-slate-200">
             Resume watching from{" "}
-            <span className="font-bold text-gold-400 font-mono">
+            <span className="font-bold text-netflix-400 font-mono">
               {formatTime(resumedTime)}
             </span>
             ?
@@ -553,7 +553,7 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
           <div className="flex items-center gap-2">
             <button
               onClick={handleResume}
-              className="px-3 py-1.5 rounded-lg bg-gold-500 text-cinematic-950 font-bold hover:bg-gold-400 transition-colors cursor-pointer"
+              className="px-3 py-1.5 rounded-lg bg-netflix-500 text-white font-bold hover:bg-netflix-400 transition-colors cursor-pointer"
             >
               Resume
             </button>
@@ -571,7 +571,7 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
       {showUpNext && nextMovie && (
         <div className="absolute bottom-28 right-6 z-40 w-80 bg-cinematic-950/95 border border-white/20 rounded-2xl p-4 shadow-2xl space-y-3 backdrop-blur-md animate-fadeIn">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-gold-400 font-bold uppercase tracking-wider font-mono">
+            <span className="text-netflix-400 font-bold uppercase tracking-wider font-mono">
               Up Next in {upNextSeconds}s
             </span>
             <button
@@ -591,7 +591,7 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <Film className="w-6 h-6 text-gold-400 m-auto" />
+                <Film className="w-6 h-6 text-netflix-400 m-auto" />
               )}
             </div>
             <div className="flex-1 min-w-0">
@@ -603,16 +603,16 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
           <div className="grid grid-cols-2 gap-2 pt-1">
             <button
               onClick={() => router.push(`/watch/${nextMovie.id}`)}
-              className="flex items-center justify-center gap-1 py-1.5 px-3 rounded-lg bg-gold-500 text-cinematic-950 font-bold text-xs hover:bg-gold-400 transition-colors"
+              className="flex items-center justify-center gap-1 py-1.5 px-3 rounded-lg bg-netflix-500 text-white font-bold text-xs hover:bg-netflix-400 transition-colors"
             >
-              <Play className="w-3.5 h-3.5 fill-cinematic-950" />
+              <Play className="w-3.5 h-3.5 fill-white" />
               <span>Play Now</span>
             </button>
             <Link
               href={`/film-report/${movie.id}`}
               className="flex items-center justify-center gap-1 py-1.5 px-3 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-colors"
             >
-              <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+              <Sparkles className="w-3.5 h-3.5 text-prime-400" />
               <span>AI Report</span>
             </Link>
           </div>
@@ -640,7 +640,7 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
               <h1 className="text-base sm:text-xl font-black text-white font-display tracking-tight drop-shadow-md">
                 {movie.title}
               </h1>
-              <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gold-500/20 text-gold-400 border border-gold-500/30">
+              <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-netflix-500/20 text-netflix-400 border border-netflix-500/30">
                 {movie.genre}
               </span>
               {isDemoFallback && (
@@ -665,7 +665,7 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-semibold backdrop-blur-md transition-colors cursor-pointer border border-white/10"
               title="Select Video Stream"
             >
-              <Film className="w-3.5 h-3.5 text-gold-400" />
+              <Film className="w-3.5 h-3.5 text-netflix-400" />
               <span className="hidden md:inline">Source</span>
             </button>
 
@@ -682,12 +682,12 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
                     }}
                     className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors ${
                       activeStreamUrl === movie.videoUrl
-                        ? "bg-gold-500/20 text-gold-400 font-bold"
+                        ? "bg-netflix-500/20 text-netflix-400 font-bold"
                         : "text-slate-300 hover:bg-white/10"
                     }`}
                   >
                     <span>Original Upload File</span>
-                    {activeStreamUrl === movie.videoUrl && <Check className="w-3.5 h-3.5 text-gold-400" />}
+                    {activeStreamUrl === movie.videoUrl && <Check className="w-3.5 h-3.5 text-netflix-400" />}
                   </button>
                 )}
                 {DEMO_STREAMS.map((demo) => (
@@ -758,16 +758,16 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
                 style={{ width: `${bufferedPercent}%` }}
               />
 
-              {/* Played Progress (Prime Cyan / Gold Gradient) */}
+              {/* Played Progress (Netflix Red Signature) */}
               <div
-                className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-gold-500 via-amber-400 to-gold-400 rounded-full shadow-lg shadow-gold-500/40"
+                className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-red-700 via-netflix-500 to-netflix-400 rounded-full shadow-lg shadow-netflix-500/40"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
 
             {/* Glowing Scrubber Thumb */}
             <div
-              className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 group-hover:w-4 group-hover:h-4 rounded-full bg-white shadow-xl shadow-gold-500/50 scale-0 group-hover:scale-100 transition-transform pointer-events-none border-2 border-gold-500"
+              className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3.5 h-3.5 group-hover:w-4 group-hover:h-4 rounded-full bg-white shadow-xl shadow-netflix-500/50 scale-0 group-hover:scale-100 transition-transform pointer-events-none border-2 border-netflix-500"
               style={{ left: `${progressPercent}%` }}
             />
 
@@ -841,7 +841,7 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
                     step={0.05}
                     value={isMuted ? 0 : volume}
                     onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
-                    className="w-20 h-1 accent-gold-500 bg-white/30 rounded-full cursor-pointer"
+                    className="w-20 h-1 accent-netflix-500 bg-white/30 rounded-full cursor-pointer"
                   />
                 </div>
               </div>
@@ -861,7 +861,7 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
                 <button
                   onClick={() => setIsAudioMenuOpen((prev) => !prev)}
                   className={`p-2 rounded-full hover:bg-white/15 transition-colors cursor-pointer ${
-                    selectedSubtitle !== "off" ? "text-gold-400" : "text-slate-300 hover:text-white"
+                    selectedSubtitle !== "off" ? "text-netflix-400" : "text-slate-300 hover:text-white"
                   }`}
                   title="Subtitles & Audio (C)"
                 >

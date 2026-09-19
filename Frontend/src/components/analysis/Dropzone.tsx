@@ -87,11 +87,11 @@ export function Dropzone({
           onClick={() => fileInputRef.current?.click()}
           className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 ${
             isDragOver
-              ? "border-gold-500 bg-gold-500/10 shadow-xl shadow-gold-500/10"
-              : "border-white/15 bg-cinematic-900/50 hover:border-gold-500/40 hover:bg-cinematic-900"
+              ? "border-netflix-500 bg-netflix-500/10 shadow-xl shadow-netflix-500/10"
+              : "border-cinematic-700 bg-cinematic-900/50 hover:border-prime-500/40 hover:bg-cinematic-900"
           }`}
         >
-          <div className="w-14 h-14 rounded-2xl bg-cinematic-800 text-gold-400 mx-auto flex items-center justify-center mb-4 border border-white/10">
+          <div className="w-14 h-14 rounded-2xl bg-cinematic-800 text-netflix-400 mx-auto flex items-center justify-center mb-4 border border-cinematic-700">
             <UploadCloud className="w-7 h-7" />
           </div>
           <h3 className="text-base font-semibold text-white font-display">
@@ -105,10 +105,10 @@ export function Dropzone({
           </Button>
         </div>
       ) : (
-        <div className="p-4 rounded-xl glass-panel border border-white/15">
+        <div className="p-4 rounded-xl glass-panel border border-cinematic-700">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-gold-500/15 text-gold-400 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-netflix-500/15 text-netflix-400 flex items-center justify-center">
                 <FileVideo className="w-5 h-5" />
               </div>
               <div>
@@ -137,7 +137,7 @@ export function Dropzone({
           {isUploading && (
             <div className="mt-4 space-y-1.5">
               <div className="flex items-center justify-between text-xs text-slate-400">
-                <span className="flex items-center gap-1 text-gold-400">
+                <span className="flex items-center gap-1 text-netflix-400">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   Streaming to ImageKit Storage...
                 </span>
@@ -145,7 +145,7 @@ export function Dropzone({
               </div>
               <div className="w-full h-2 bg-cinematic-950 rounded-full overflow-hidden border border-white/5">
                 <div
-                  className="h-full bg-gradient-to-r from-gold-500 to-amber-400 transition-all duration-300"
+                  className="h-full bg-gradient-to-r from-netflix-500 to-netflix-400 transition-all duration-300"
                   style={{ width: `${progress}%` }}
                 />
               </div>

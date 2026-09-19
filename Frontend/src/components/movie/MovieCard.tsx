@@ -27,7 +27,7 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
       movie.posterUrl.includes("/uploads/videos/"));
 
   return (
-    <div className="group relative flex-shrink-0 w-44 sm:w-56 md:w-64 rounded-xl overflow-hidden bg-cinematic-900 border border-white/10 transition-all duration-300 hover:scale-[1.03] hover:border-gold-500/50 hover:shadow-2xl hover:shadow-gold-500/10 select-none">
+    <div className="group relative flex-shrink-0 w-44 sm:w-56 md:w-64 rounded-xl overflow-hidden bg-cinematic-900 border border-cinematic-700 transition-all duration-300 hover:scale-[1.03] hover:border-cinematic-600 hover:shadow-2xl hover:shadow-black/75 select-none">
       {/* Aspect ratio container (2:3 poster format) */}
       <div className="relative aspect-[2/3] w-full overflow-hidden bg-cinematic-950">
         {movie.posterUrl && !isVideo && !imageError ? (
@@ -45,7 +45,7 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
             className="w-full h-full flex flex-col items-center justify-center p-4 text-center"
             style={{ background: fallbackBg }}
           >
-            <Film className="w-12 h-12 text-gold-500/40 mb-2" />
+            <Film className="w-12 h-12 text-slate-500 mb-2" />
             <span className="text-xs font-semibold text-slate-300 font-display line-clamp-2">
               {movie.title}
             </span>
@@ -57,13 +57,13 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
 
         {/* Top Floating Badges */}
         <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none z-10">
-          <Badge variant="gold" className="text-[10px] px-2 py-0.5 backdrop-blur-md">
+          <Badge variant="prime" className="text-[10px] px-2 py-0.5 backdrop-blur-md">
             {movie.genre}
           </Badge>
 
           {movie.rating && (
-            <div className="flex items-center gap-1 bg-cinematic-950/80 backdrop-blur-md px-2 py-0.5 rounded-full border border-white/10 text-gold-400 text-xs font-semibold">
-              <Star className="w-3 h-3 fill-gold-400 text-gold-400" />
+            <div className="flex items-center gap-1 bg-cinematic-950/85 backdrop-blur-md px-2 py-0.5 rounded-full border border-cinematic-700 text-amber-400 text-xs font-semibold">
+              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
               <span>{movie.rating}</span>
             </div>
           )}
@@ -75,10 +75,10 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
           <div className="flex justify-center pt-8">
             <Link
               href={`/watch/${movie.id}`}
-              className="w-12 h-12 rounded-full bg-gold-500 hover:bg-gold-400 text-cinematic-950 flex items-center justify-center shadow-xl shadow-gold-500/30 transform hover:scale-110 transition-transform cursor-pointer"
+              className="w-12 h-12 rounded-full bg-netflix-500 hover:bg-netflix-400 text-white flex items-center justify-center shadow-xl shadow-netflix-500/35 transform hover:scale-110 transition-transform cursor-pointer"
               title="Watch Movie"
             >
-              <Play className="w-6 h-6 fill-cinematic-950 ml-0.5" />
+              <Play className="w-6 h-6 fill-white ml-0.5" />
             </Link>
           </div>
 
@@ -96,12 +96,12 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
               {movie.summary || `Starring ${movie.casting}. Produced by ${movie.productionHouses.join(", ") || "Independent"}.`}
             </p>
 
-            <div className="grid grid-cols-2 gap-2 pt-1 border-t border-white/10">
+            <div className="grid grid-cols-2 gap-2 pt-1 border-t border-cinematic-700">
               <Link
                 href={`/watch/${movie.id}`}
-                className="flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-lg bg-gold-500 hover:bg-gold-400 text-cinematic-950 text-xs font-bold transition-colors shadow-sm shadow-gold-500/20"
+                className="flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-lg bg-netflix-500 hover:bg-netflix-400 text-white text-xs font-bold transition-colors shadow-sm shadow-netflix-500/20"
               >
-                <Play className="w-3 h-3 fill-cinematic-950" />
+                <Play className="w-3 h-3 fill-white" />
                 <span>
                   {currentProgress && currentProgress.progressPercent > 5 ? "Resume" : "Watch"}
                 </span>
@@ -109,7 +109,7 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
 
               <Link
                 href={`/movies/${movie.id}`}
-                className="flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-100 text-xs font-medium transition-colors"
+                className="flex items-center justify-center gap-1 py-1.5 px-2.5 rounded-lg bg-cinematic-850 hover:bg-cinematic-800 border border-cinematic-700 text-slate-100 text-xs font-medium transition-colors"
               >
                 <span>Details</span>
                 <ArrowRight className="w-3 h-3" />
@@ -118,11 +118,11 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
           </div>
         </div>
 
-        {/* In-Progress Watched Progress Bar Indicator (Netflix style) */}
+        {/* In-Progress Watched Progress Bar Indicator (Netflix signature red) */}
         {currentProgress && currentProgress.progressPercent > 0 && (
           <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60 z-20">
             <div
-              className="h-full bg-gradient-to-r from-gold-600 via-gold-500 to-amber-300"
+              className="h-full bg-gradient-to-r from-red-700 via-netflix-500 to-netflix-400"
               style={{ width: `${currentProgress.progressPercent}%` }}
             />
           </div>
@@ -130,8 +130,8 @@ export function MovieCard({ movie, priority = false }: MovieCardProps) {
       </div>
 
       {/* Card Footer for quick scanning on mobile/desktop without hover */}
-      <div className="p-3 bg-cinematic-900 border-t border-white/5">
-        <h3 className="text-sm font-semibold text-slate-200 truncate group-hover:text-gold-400 transition-colors">
+      <div className="p-3 bg-cinematic-900 border-t border-cinematic-700/60">
+        <h3 className="text-sm font-semibold text-slate-200 truncate group-hover:text-white transition-colors">
           {movie.title}
         </h3>
         <div className="flex items-center justify-between mt-1 text-xs text-slate-400">

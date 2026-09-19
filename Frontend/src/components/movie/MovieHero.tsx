@@ -82,11 +82,11 @@ export function MovieHero({ movie }: MovieHeroProps) {
         <div className="max-w-2xl space-y-4">
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="gold">Trending Spotlight</Badge>
-            <Badge variant="neural">{movie.genre}</Badge>
+            <Badge variant="netflix">Trending Spotlight</Badge>
+            <Badge variant="prime">{movie.genre}</Badge>
             {movie.rating && (
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cinematic-900/90 text-gold-400 border border-gold-500/30 backdrop-blur-md">
-                <Star className="w-3 h-3 fill-gold-400 text-gold-400" />
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cinematic-900/90 text-amber-400 border border-cinematic-700 backdrop-blur-md">
+                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
                 <span>{movie.rating} Studio Rating</span>
               </span>
             )}
@@ -129,9 +129,9 @@ export function MovieHero({ movie }: MovieHeroProps) {
               <Button
                 variant="primary"
                 size="lg"
-                className="bg-gold-500 hover:bg-gold-400 text-cinematic-950 font-black shadow-xl shadow-gold-500/25 px-6"
+                className="px-6 font-bold"
               >
-                <Play className="w-5 h-5 fill-cinematic-950 mr-1.5" />
+                <Play className="w-5 h-5 fill-white mr-1.5" />
                 <span>
                   {currentProgress && currentProgress.progressPercent > 5
                     ? `Resume (${Math.max(1, Math.round((currentProgress.durationSeconds - currentProgress.progressSeconds) / 60))}m left)`

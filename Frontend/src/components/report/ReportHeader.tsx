@@ -32,9 +32,9 @@ export function ReportHeader({ report }: ReportHeaderProps) {
   };
 
   return (
-    <div className="p-8 rounded-3xl glass-panel-gold border border-gold-500/25 space-y-6 relative overflow-hidden">
+    <div className="p-8 rounded-3xl glass-panel border border-netflix-500/25 space-y-6 relative overflow-hidden">
       {/* Subtle background glow */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gold-500/5 rounded-full filter blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-netflix-500/5 rounded-full filter blur-3xl pointer-events-none" />
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
         <div className="space-y-3 max-w-3xl">
@@ -63,7 +63,7 @@ export function ReportHeader({ report }: ReportHeaderProps) {
           <div className="flex flex-wrap items-center gap-2 pt-1 text-xs font-mono text-slate-300">
             {meta.director && (
               <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cinematic-950/70 border border-white/5">
-                <User className="w-3.5 h-3.5 text-gold-400" />
+                <User className="w-3.5 h-3.5 text-netflix-400" />
                 <span>Dir: <strong className="text-white">{meta.director}</strong></span>
               </span>
             )}
@@ -81,7 +81,7 @@ export function ReportHeader({ report }: ReportHeaderProps) {
             )}
             {meta.release_year && (
               <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cinematic-950/70 border border-white/5">
-                <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                <Calendar className="w-3.5 h-3.5 text-prime-400" />
                 <span>Release: <strong className="text-white">{meta.release_month ? `${meta.release_month}/` : ""}{meta.release_year}</strong></span>
               </span>
             )}
@@ -103,18 +103,18 @@ export function ReportHeader({ report }: ReportHeaderProps) {
 
         {/* Right side rating badge & download button */}
         <div className="flex flex-col items-start md:items-end gap-4">
-          <div className="flex items-center gap-3 bg-cinematic-950/80 p-3.5 rounded-2xl border border-gold-500/30 shadow-lg">
+          <div className="flex items-center gap-3 bg-cinematic-950/80 p-3.5 rounded-2xl border border-netflix-500/30 shadow-lg">
             <div className="text-right">
               <span className="block text-[10px] uppercase font-mono tracking-wider text-slate-400">
                 Composite Score
               </span>
-              <span className="text-xs font-semibold text-gold-400">
+              <span className="text-xs font-semibold text-netflix-400">
                 {report.executive_summary?.commercial_verdict}
               </span>
             </div>
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-tr from-gold-600 to-amber-400 flex flex-col items-center justify-center text-cinematic-950 shadow-md">
-              <div className="flex items-center gap-0.5 text-base font-black">
-                <Star className="w-3.5 h-3.5 fill-cinematic-950" />
+            <div className="w-14 h-14 rounded-xl bg-gradient-to-tr from-netflix-600 to-netflix-400 flex flex-col items-center justify-center text-white shadow-md">
+              <div className="flex items-center gap-0.5 text-base font-black text-white">
+                <Star className="w-3.5 h-3.5 fill-white" />
                 <span>{report.executive_summary?.overall_film_rating?.toFixed(1) || "8.5"}</span>
               </div>
               <span className="text-[9px] font-bold uppercase tracking-wider">/ 10</span>
@@ -122,7 +122,7 @@ export function ReportHeader({ report }: ReportHeaderProps) {
           </div>
 
           <Button variant="secondary" onClick={downloadPdf} size="md" className="gap-2">
-            <Download className="w-4 h-4 text-gold-400" />
+            <Download className="w-4 h-4 text-netflix-400" />
             <span>Download Studio PDF</span>
           </Button>
         </div>

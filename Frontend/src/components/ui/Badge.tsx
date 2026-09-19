@@ -4,7 +4,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: "gold" | "neural" | "dark" | "outline" | "success" | "danger";
+  variant?: "gold" | "neural" | "netflix" | "prime" | "dark" | "outline" | "success" | "danger";
 }
 
 export function Badge({
@@ -14,10 +14,12 @@ export function Badge({
   ...props
 }: BadgeProps) {
   const variants = {
-    gold: "bg-gold-500/15 text-gold-400 border-gold-500/30",
-    neural: "bg-neural-500/15 text-neural-400 border-neural-500/30",
-    dark: "bg-cinematic-800 text-slate-300 border-white/10",
-    outline: "bg-transparent text-slate-300 border-white/20",
+    gold: "bg-netflix-500/15 text-netflix-400 border-netflix-500/30",
+    netflix: "bg-netflix-500/15 text-netflix-400 border-netflix-500/30",
+    neural: "bg-prime-500/15 text-prime-400 border-prime-500/30",
+    prime: "bg-prime-500/15 text-prime-400 border-prime-500/30",
+    dark: "bg-cinematic-900 text-slate-200 border-cinematic-700",
+    outline: "bg-transparent text-slate-300 border-cinematic-700",
     success: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
     danger: "bg-rose-500/15 text-rose-400 border-rose-500/30",
   };

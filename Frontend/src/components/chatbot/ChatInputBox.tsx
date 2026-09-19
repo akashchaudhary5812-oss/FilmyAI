@@ -27,7 +27,7 @@ export function ChatInputBox({ onSendMessage, isLoading }: ChatInputBoxProps) {
         onChange={(e) => setInput(e.target.value)}
         placeholder="Ask about strengths, risks, box office..."
         disabled={isLoading}
-        className="flex-grow bg-cinematic-950/90 border border-white/10 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 transition-colors"
+        className="flex-grow bg-cinematic-950/90 border border-cinematic-700 rounded-xl py-2.5 px-3.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 focus:ring-1 focus:ring-prime-500/20 transition-colors"
       />
       <Button
         type="submit"

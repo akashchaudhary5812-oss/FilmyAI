@@ -67,7 +67,7 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
       description: isUrlSource
         ? "Probing remote video stream accessibility, MIME format, and size headers."
         : "Verifying local disk storage integrity and video stream headers.",
-      icon: isUrlSource ? <Globe className="w-5 h-5 text-gold-400" /> : <Video className="w-5 h-5 text-gold-400" />,
+      icon: isUrlSource ? <Globe className="w-5 h-5 text-netflix-400" /> : <Video className="w-5 h-5 text-netflix-400" />,
     },
     {
       stateCode: "ANALYZING_VIDEO",
@@ -79,7 +79,7 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
       stateCode: "ANALYZING_COMMERCIAL",
       label: "COMMERCIAL_ML: Box Office & Market Viability Prediction",
       description: "Running historical cast, director track record, and budget metrics across gradient-boosted commercial models.",
-      icon: <BarChart3 className="w-5 h-5 text-amber-400" />,
+      icon: <BarChart3 className="w-5 h-5 text-prime-400" />,
     },
     {
       stateCode: "GENERATING_REPORT",
@@ -175,25 +175,25 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
     <div className="max-w-2xl mx-auto p-6 sm:p-8 rounded-3xl glass-panel border border-white/10 shadow-2xl space-y-8 my-8 animate-in fade-in duration-300">
       {/* Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-gold-500/10 text-gold-400 border border-gold-500/20 mb-1">
+        <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-prime-500/15 text-prime-400 border border-prime-500/30 mb-1">
           {isCompleted ? (
             <CheckCircle2 className="w-8 h-8 text-emerald-400 animate-in zoom-in-75" />
           ) : pipelineError ? (
             <AlertTriangle className="w-8 h-8 text-red-400 animate-in zoom-in-75" />
           ) : (
-            <Loader2 className="w-8 h-8 animate-spin text-gold-400" />
+            <Loader2 className="w-8 h-8 animate-spin text-prime-400" />
           )}
         </div>
 
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cinematic-900 border border-white/10 text-[11px] font-mono uppercase tracking-wider text-gold-400">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cinematic-900 border border-cinematic-700 text-[11px] font-mono uppercase tracking-wider text-prime-400">
             <span
               className={`w-2 h-2 rounded-full ${
                 isCompleted
                   ? "bg-emerald-400"
                   : pipelineError
                   ? "bg-red-400"
-                  : "bg-gold-400 animate-pulse"
+                  : "bg-prime-400 animate-pulse"
               }`}
             />
             <span>Live Status: {activeStateCode}</span>
@@ -220,11 +220,11 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
         <div className="space-y-1.5">
           <div className="flex items-center justify-between text-[11px] font-mono text-slate-400">
             <span>Pipeline Progress</span>
-            <span className="text-gold-400 font-semibold">{isCompleted ? 100 : currentProgress}%</span>
+            <span className="text-netflix-400 font-semibold">{isCompleted ? 100 : currentProgress}%</span>
           </div>
           <div className="w-full h-2 bg-cinematic-950 rounded-full overflow-hidden border border-white/5">
             <div
-              className="h-full bg-gradient-to-r from-gold-500 to-amber-400 transition-all duration-500 rounded-full"
+              className="h-full bg-gradient-to-r from-netflix-500 to-netflix-400 transition-all duration-500 rounded-full"
               style={{ width: `${isCompleted ? 100 : currentProgress}%` }}
             />
           </div>
@@ -236,7 +236,7 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
         <div className="flex items-center gap-2 text-slate-300">
           <ShieldCheck className="w-4 h-4 text-emerald-400" />
           <span>Ingestion Source:</span>
-          <span className="font-mono text-gold-400 font-semibold">
+          <span className="font-mono text-netflix-400 font-semibold">
             {isUrlSource ? "Public / Authorized Video URL" : "Local Video Upload"}
           </span>
         </div>
@@ -279,7 +279,7 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
               key={step.stateCode}
               className={`p-4 rounded-xl transition-all duration-300 flex items-start gap-4 border ${
                 isActive
-                  ? "bg-cinematic-850 border-gold-500/40 shadow-lg shadow-gold-500/10 scale-[1.01]"
+                  ? "bg-cinematic-850 border-netflix-500/40 shadow-lg shadow-netflix-500/10 scale-[1.01]"
                   : isDone
                   ? "bg-cinematic-900/80 border-emerald-500/20"
                   : "bg-cinematic-950/40 border-white/5 opacity-40"
@@ -289,7 +289,7 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
                 {isDone ? (
                   <CheckCircle2 className="w-5 h-5 text-emerald-400" />
                 ) : isActive ? (
-                  <Loader2 className="w-5 h-5 text-gold-400 animate-spin" />
+                  <Loader2 className="w-5 h-5 text-netflix-400 animate-spin" />
                 ) : (
                   step.icon
                 )}
@@ -299,7 +299,7 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
                 <div className="flex items-center justify-between">
                   <h4
                     className={`text-sm font-semibold ${
-                      isActive ? "text-gold-400" : isDone ? "text-slate-100" : "text-slate-400"
+                      isActive ? "text-netflix-400" : isDone ? "text-slate-100" : "text-slate-400"
                     }`}
                   >
                     {step.label}
@@ -309,7 +309,7 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
                       isDone
                         ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                         : isActive
-                        ? "bg-gold-500/10 text-gold-400 border border-gold-500/20 animate-pulse"
+                        ? "bg-prime-500/15 text-prime-400 border border-prime-500/30 animate-pulse"
                         : "text-slate-500"
                     }`}
                   >
@@ -325,8 +325,8 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
 
       {/* Execution Benchmark Timings */}
       {isCompleted && timings && Object.keys(timings).length > 0 && (
-        <div className="p-4 rounded-2xl bg-cinematic-950/80 border border-white/10 space-y-2 text-xs">
-          <span className="font-mono text-[10px] uppercase tracking-wider text-gold-400 font-semibold">
+        <div className="p-4 rounded-2xl bg-cinematic-950/80 border border-cinematic-700 space-y-2 text-xs">
+          <span className="font-mono text-[10px] uppercase tracking-wider text-prime-400 font-semibold">
             Actual Measured Benchmarks
           </span>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 font-mono text-[11px] text-slate-300">

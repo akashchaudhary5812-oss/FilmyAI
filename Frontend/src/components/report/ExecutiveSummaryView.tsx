@@ -13,10 +13,10 @@ export function ExecutiveSummaryView({ report }: ExecutiveSummaryViewProps) {
     <div className="p-6 rounded-2xl glass-panel space-y-4">
       <div className="flex items-center justify-between border-b border-white/10 pb-3">
         <h3 className="text-lg font-bold text-white font-display flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-gold-400" />
+          <Sparkles className="w-5 h-5 text-netflix-400" />
           <span>Executive Intelligence Summary</span>
         </h3>
-        <span className="text-xs text-gold-400 font-mono font-semibold">
+        <span className="text-xs text-netflix-400 font-mono font-semibold">
           {summary?.commercial_verdict}
         </span>
       </div>

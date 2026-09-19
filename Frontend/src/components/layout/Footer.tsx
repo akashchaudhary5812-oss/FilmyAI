@@ -4,24 +4,24 @@ import { Clapperboard, Sparkles, Shield, Cpu, ExternalLink } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="bg-cinematic-950 border-t border-white/10 mt-24 text-slate-400 text-sm">
+    <footer className="bg-cinematic-950 border-t border-cinematic-700 mt-24 text-slate-400 text-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Col 1: Brand & Philosophy */}
           <div className="md:col-span-1 space-y-4">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-gold-600 to-amber-300 flex items-center justify-center">
-                <Clapperboard className="w-4 h-4 text-cinematic-950" />
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-red-700 via-netflix-500 to-prime-500 flex items-center justify-center shadow-md shadow-netflix-500/20">
+                <Clapperboard className="w-4 h-4 text-white" />
               </div>
               <span className="text-lg font-black tracking-wider text-white font-display">
-                FILMY<span className="text-gold-400 ml-1">AI</span>
+                FILMY<span className="text-netflix-500 ml-1">AI</span>
               </span>
             </Link>
             <p className="text-xs text-slate-400 leading-relaxed">
               Studio-grade film intelligence platform unifying multimodal video analysis, predictive commercial modeling, and LLM script synthesis.
             </p>
-            <div className="flex items-center gap-2 text-xs text-gold-500/80 font-mono pt-1">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-2 text-xs text-prime-400/90 font-mono pt-1">
+              <Sparkles className="w-3.5 h-3.5 text-prime-400" />
               <span>AI Engine: Multimodal Studio v1.0</span>
             </div>
           </div>
@@ -33,22 +33,22 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs">
               <li>
-                <Link href="/" className="hover:text-gold-400 transition-colors">
+                <Link href="/" className="hover:text-white transition-colors">
                   Trending Releases
                 </Link>
               </li>
               <li>
-                <Link href="/movies" className="hover:text-gold-400 transition-colors">
+                <Link href="/movies" className="hover:text-white transition-colors">
                   Film Catalog & Archive
                 </Link>
               </li>
               <li>
-                <Link href="/analyze" className="hover:text-gold-400 transition-colors">
+                <Link href="/analyze" className="hover:text-netflix-400 transition-colors">
                   Upload & Analyze Film
                 </Link>
               </li>
               <li>
-                <Link href="/search" className="hover:text-gold-400 transition-colors">
+                <Link href="/search" className="hover:text-white transition-colors">
                   Multi-Parametric Search
                 </Link>
               </li>
@@ -62,15 +62,15 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs">
               <li className="flex items-center gap-1.5 text-slate-300">
-                <Cpu className="w-3.5 h-3.5 text-neural-400" />
+                <Cpu className="w-3.5 h-3.5 text-prime-400" />
                 <span>PyTorch Video Cinematography</span>
               </li>
               <li className="flex items-center gap-1.5 text-slate-300">
-                <Cpu className="w-3.5 h-3.5 text-gold-400" />
+                <Cpu className="w-3.5 h-3.5 text-netflix-400" />
                 <span>ML Commercial Predictor</span>
               </li>
               <li className="flex items-center gap-1.5 text-slate-300">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <Sparkles className="w-3.5 h-3.5 text-prime-400" />
                 <span>Groq LLM Studio Synthesizer</span>
               </li>
               <li className="flex items-center gap-1.5 text-slate-300">
@@ -88,7 +88,7 @@ export function Footer() {
             <p className="text-xs text-slate-400 leading-relaxed mb-4">
               Configured dynamically via environment variables with zero hardcoded endpoints or client-exposed secrets.
             </p>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-cinematic-900 border border-white/10 text-[11px] text-slate-300 font-mono">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-cinematic-900 border border-cinematic-700 text-[11px] text-slate-300 font-mono">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
               API Base: Configurable
             </div>

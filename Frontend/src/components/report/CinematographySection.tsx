@@ -69,10 +69,10 @@ export function CinematographySection({ report }: CinematographySectionProps) {
           {/* Shot Count & Scenes */}
           <div className="p-3.5 rounded-xl bg-cinematic-900/80 border border-white/5 space-y-1">
             <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 flex items-center gap-1">
-              <Layers className="w-3 h-3 text-gold-400" />
+              <Layers className="w-3 h-3 text-netflix-400" />
               <span>Shots / Scenes</span>
             </span>
-            <div className="text-base font-bold text-gold-400 font-mono">
+            <div className="text-base font-bold text-netflix-400 font-mono">
               {rawVid.total_shots ? `${rawVid.total_shots} shots` : "Segmented"}
             </div>
             <span className="text-[11px] text-slate-400 font-mono">
@@ -144,7 +144,7 @@ export function CinematographySection({ report }: CinematographySectionProps) {
           {/* Lighting Style Distribution */}
           <div className="space-y-2.5">
             <span className="text-xs font-mono uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-              <Sun className="w-3.5 h-3.5 text-amber-400" />
+              <Sun className="w-3.5 h-3.5 text-prime-400" />
               <span>Lighting & Atmosphere Profile</span>
             </span>
             {Object.keys(lightDist).length > 0 ? (
@@ -153,11 +153,11 @@ export function CinematographySection({ report }: CinematographySectionProps) {
                   <div key={style} className="space-y-1">
                     <div className="flex justify-between text-xs font-mono">
                       <span className="text-slate-300">{style}</span>
-                      <span className="text-amber-300">{data.percentage}% ({data.count})</span>
+                      <span className="text-prime-300">{data.percentage}% ({data.count})</span>
                     </div>
                     <div className="w-full bg-cinematic-800 h-1.5 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-amber-500 to-yellow-400"
+                        className="h-full bg-gradient-to-r from-prime-500 to-prime-400"
                         style={{ width: `${Math.max(4, data.percentage)}%` }}
                       />
                     </div>
@@ -176,7 +176,7 @@ export function CinematographySection({ report }: CinematographySectionProps) {
       {/* Narrative Synthesis Grids */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-4 rounded-xl bg-cinematic-950/70 border border-white/5 space-y-1.5">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-gold-400">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-netflix-400">
             <Film className="w-4 h-4" />
             <span>Visual Grammar & Style</span>
           </div>
@@ -196,7 +196,7 @@ export function CinematographySection({ report }: CinematographySectionProps) {
         </div>
 
         <div className="p-4 rounded-xl bg-cinematic-950/70 border border-white/5 space-y-1.5">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-prime-400">
             <Sun className="w-4 h-4" />
             <span>Lighting Schemes & Atmosphere</span>
           </div>
@@ -234,7 +234,7 @@ export function CinematographySection({ report }: CinematographySectionProps) {
       {highlights.length > 0 && (
         <div className="pt-2 space-y-3">
           <h4 className="text-xs uppercase font-mono tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+            <Sparkles className="w-3.5 h-3.5 text-netflix-400" />
             <span>Extracted Keyframe Scenes & Critical Beats</span>
           </h4>
           <div className="space-y-2.5">
@@ -244,7 +244,7 @@ export function CinematographySection({ report }: CinematographySectionProps) {
                 className="p-3.5 rounded-xl bg-cinematic-900/60 border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
               >
                 <div className="flex items-center gap-2.5">
-                  <span className="px-2 py-0.5 rounded bg-cinematic-800 text-gold-400 font-mono font-semibold">
+                  <span className="px-2 py-0.5 rounded bg-cinematic-800 text-netflix-400 font-mono font-semibold">
                     {h.timestamp_range}
                   </span>
                   <span className="font-semibold text-white">{h.shot_type}</span>

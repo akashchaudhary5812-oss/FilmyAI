@@ -21,7 +21,7 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl glass-panel my-8 max-w-lg mx-auto">
-      <div className="p-4 rounded-full bg-cinematic-800 text-gold-400 mb-4 border border-white/10">
+      <div className="p-4 rounded-full bg-cinematic-800 text-netflix-400 mb-4 border border-white/10">
         {icon || <Film className="w-8 h-8 opacity-80" />}
       </div>
       <h3 className="text-xl font-semibold text-slate-100 font-display mb-2">{title}</h3>

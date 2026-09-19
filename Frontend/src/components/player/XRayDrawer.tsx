@@ -42,11 +42,11 @@ export function XRayDrawer({ movie, isOpen, onClose, currentTime }: XRayDrawerPr
   };
 
   return (
-    <div className="absolute top-0 right-0 bottom-0 z-40 w-full max-w-sm sm:max-w-md bg-cinematic-950/95 backdrop-blur-xl border-l border-white/10 shadow-2xl flex flex-col animate-slideLeft">
+    <div className="absolute top-0 right-0 bottom-0 z-40 w-full max-w-sm sm:max-w-md bg-cinematic-950/95 backdrop-blur-xl border-l border-cinematic-700 shadow-2xl flex flex-col animate-slideLeft">
       {/* Header */}
-      <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-cinematic-900/60">
+      <div className="p-4 sm:p-5 border-b border-cinematic-700 flex items-center justify-between bg-cinematic-900/60">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-600 to-blue-500 text-white flex items-center justify-center font-black text-xs shadow-md shadow-cyan-500/20">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-prime-600 to-prime-400 text-white flex items-center justify-center font-black text-xs shadow-md shadow-prime-500/20">
             X
           </div>
           <div>
@@ -54,7 +54,7 @@ export function XRayDrawer({ movie, isOpen, onClose, currentTime }: XRayDrawerPr
               <h3 className="text-sm font-black text-white uppercase tracking-wider font-display">
                 X-RAY INSIGHTS
               </h3>
-              <Badge variant="gold" className="text-[9px] py-0 px-1.5">
+              <Badge variant="prime" className="text-[9px] py-0 px-1.5">
                 Prime AI
               </Badge>
             </div>
@@ -73,12 +73,12 @@ export function XRayDrawer({ movie, isOpen, onClose, currentTime }: XRayDrawerPr
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center border-b border-white/10 bg-cinematic-900/30 px-3 pt-2 gap-2">
+      <div className="flex items-center border-b border-cinematic-700 bg-cinematic-900/30 px-3 pt-2 gap-2">
         <button
           onClick={() => setActiveTab("ai")}
           className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
             activeTab === "ai"
-              ? "border-cyan-400 text-cyan-400"
+              ? "border-prime-400 text-prime-400"
               : "border-transparent text-slate-400 hover:text-slate-200"
           }`}
         >
@@ -90,7 +90,7 @@ export function XRayDrawer({ movie, isOpen, onClose, currentTime }: XRayDrawerPr
           onClick={() => setActiveTab("cast")}
           className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
             activeTab === "cast"
-              ? "border-cyan-400 text-cyan-400"
+              ? "border-prime-400 text-prime-400"
               : "border-transparent text-slate-400 hover:text-slate-200"
           }`}
         >
@@ -102,7 +102,7 @@ export function XRayDrawer({ movie, isOpen, onClose, currentTime }: XRayDrawerPr
           onClick={() => setActiveTab("trivia")}
           className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold uppercase tracking-wider border-b-2 transition-colors cursor-pointer ${
             activeTab === "trivia"
-              ? "border-cyan-400 text-cyan-400"
+              ? "border-prime-400 text-prime-400"
               : "border-transparent text-slate-400 hover:text-slate-200"
           }`}
         >
@@ -135,7 +135,7 @@ export function XRayDrawer({ movie, isOpen, onClose, currentTime }: XRayDrawerPr
             <div className="grid grid-cols-2 gap-3">
               <div className="p-3 rounded-xl bg-cinematic-900 border border-white/5 space-y-1">
                 <span className="text-[10px] text-slate-400 uppercase font-mono">Genre Signature</span>
-                <p className="text-xs font-bold text-gold-400">{movie.genre}</p>
+                <p className="text-xs font-bold text-netflix-400">{movie.genre}</p>
               </div>
               <div className="p-3 rounded-xl bg-cinematic-900 border border-white/5 space-y-1">
                 <span className="text-[10px] text-slate-400 uppercase font-mono">Pacing Curve</span>
@@ -146,7 +146,7 @@ export function XRayDrawer({ movie, isOpen, onClose, currentTime }: XRayDrawerPr
             {/* Synopsis overview */}
             <div className="p-3.5 rounded-xl bg-cinematic-900 border border-white/5 space-y-2">
               <span className="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-gold-400" />
+                <FileText className="w-3.5 h-3.5 text-netflix-400" />
                 Script Context
               </span>
               <p className="text-xs text-slate-300 line-clamp-4 leading-relaxed">
@@ -158,16 +158,16 @@ export function XRayDrawer({ movie, isOpen, onClose, currentTime }: XRayDrawerPr
             <Link
               href={`/film-report/${movie.id}`}
               target="_blank"
-              className="flex items-center justify-between p-3.5 rounded-xl bg-gradient-to-r from-gold-600/20 to-amber-500/10 border border-gold-500/30 hover:border-gold-500/60 transition-all group"
+              className="flex items-center justify-between p-3.5 rounded-xl bg-gradient-to-r from-netflix-600/20 to-netflix-500/10 border border-netflix-500/30 hover:border-netflix-500/60 transition-all group"
             >
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-gold-400 group-hover:scale-110 transition-transform" />
+                <Sparkles className="w-4 h-4 text-netflix-400 group-hover:scale-110 transition-transform" />
                 <div>
                   <h4 className="text-xs font-bold text-white">Full Intelligence Dossier</h4>
-                  <p className="text-[10px] text-gold-300/80">View complete commercial forecast & RAG</p>
+                  <p className="text-[10px] text-netflix-400/80">View complete commercial forecast &amp; RAG</p>
                 </div>
               </div>
-              <ExternalLink className="w-3.5 h-3.5 text-gold-400" />
+              <ExternalLink className="w-3.5 h-3.5 text-netflix-400" />
             </Link>
           </div>
         )}
@@ -200,7 +200,7 @@ export function XRayDrawer({ movie, isOpen, onClose, currentTime }: XRayDrawerPr
           <div className="space-y-3">
             <div className="p-3.5 rounded-xl bg-cinematic-900 border border-white/5 space-y-2">
               <div className="flex items-center gap-2 text-xs font-bold text-white">
-                <Building className="w-3.5 h-3.5 text-gold-400" />
+                <Building className="w-3.5 h-3.5 text-netflix-400" />
                 <span>Production & Studio House</span>
               </div>
               <p className="text-xs text-slate-300">

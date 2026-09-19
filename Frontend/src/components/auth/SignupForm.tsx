@@ -38,10 +38,10 @@ export function SignupForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-8 rounded-2xl glass-panel shadow-2xl border border-white/10">
+    <div className="w-full max-w-md mx-auto p-8 rounded-2xl glass-panel shadow-2xl border border-cinematic-700">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-gold-600 to-amber-300 mb-3 shadow-lg shadow-gold-500/20">
-          <Clapperboard className="w-6 h-6 text-cinematic-950" />
+        <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-red-700 via-netflix-500 to-prime-500 mb-3 shadow-lg shadow-netflix-500/25">
+          <Clapperboard className="w-6 h-6 text-white" />
         </div>
         <h2 className="text-2xl font-bold text-white font-display">Create Studio Account</h2>
         <p className="text-xs text-slate-400 mt-1">
@@ -69,7 +69,7 @@ export function SignupForm() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="christopher_nolan"
               required
-              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors"
+              className="w-full bg-cinematic-950/80 border border-cinematic-700 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 focus:ring-1 focus:ring-prime-500/30 transition-colors"
             />
           </div>
         </div>
@@ -86,7 +86,7 @@ export function SignupForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="director@syncopy.com"
               required
-              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors"
+              className="w-full bg-cinematic-950/80 border border-cinematic-700 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 focus:ring-1 focus:ring-prime-500/30 transition-colors"
             />
           </div>
         </div>
@@ -103,7 +103,7 @@ export function SignupForm() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500 transition-colors"
+              className="w-full bg-cinematic-950/80 border border-cinematic-700 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 focus:ring-1 focus:ring-prime-500/30 transition-colors"
             />
           </div>
         </div>
@@ -120,7 +120,7 @@ export function SignupForm() {
 
       <div className="mt-6 pt-6 border-t border-white/10 text-center text-xs text-slate-400">
         Already have a studio account?{" "}
-        <Link href="/login" className="text-gold-400 font-semibold hover:underline">
+        <Link href="/login" className="text-netflix-400 font-semibold hover:underline">
           Sign In
         </Link>
       </div>

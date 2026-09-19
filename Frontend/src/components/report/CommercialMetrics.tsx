@@ -117,7 +117,7 @@ export function CommercialMetrics({ report }: CommercialMetricsProps) {
               </span>
               {successProb !== null && (
                 <span className="text-xs text-slate-300 font-mono">
-                  Hit Prob: <strong className="text-gold-400">{successProb}%</strong>
+                  Hit Prob: <strong className="text-netflix-400">{successProb}%</strong>
                 </span>
               )}
             </div>
@@ -174,13 +174,13 @@ export function CommercialMetrics({ report }: CommercialMetricsProps) {
         {factors.length > 0 && (
           <div className="space-y-2 pt-2 border-t border-white/5">
             <span className="text-xs font-mono uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-gold-400" />
+              <Activity className="w-3.5 h-3.5 text-netflix-400" />
               <span>Key Feature Weights Driving ML Prediction</span>
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {factors.map((f, i) => (
                 <div key={i} className="p-2.5 rounded-lg bg-cinematic-900/60 border border-white/5 flex items-start gap-2 text-xs">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-gold-400 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-netflix-400 flex-shrink-0 mt-0.5" />
                   <div>
                     <span className="font-semibold text-slate-200">{f.factor}:</span>{" "}
                     <span className="text-slate-400">{f.impact}</span>
@@ -206,7 +206,7 @@ export function CommercialMetrics({ report }: CommercialMetricsProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Primary Drivers */}
         <div className="space-y-3">
-          <h4 className="text-xs font-mono uppercase tracking-wider text-gold-400 flex items-center gap-1.5">
+          <h4 className="text-xs font-mono uppercase tracking-wider text-netflix-400 flex items-center gap-1.5">
             <TrendingUp className="w-4 h-4" />
             <span>Primary Commercial Catalysts</span>
           </h4>
@@ -254,7 +254,7 @@ export function CommercialMetrics({ report }: CommercialMetricsProps) {
         {/* Franchise & Ancillary */}
         <div className="space-y-2">
           <h4 className="text-xs font-mono uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-            <Layers className="w-4 h-4 text-amber-400" />
+            <Layers className="w-4 h-4 text-prime-400" />
             <span>Franchise & Ancillary Potential</span>
           </h4>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">

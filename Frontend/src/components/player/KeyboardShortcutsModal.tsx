@@ -26,10 +26,10 @@ export function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShortcutsMod
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
-      <div className="relative w-full max-w-md bg-cinematic-900 border border-white/10 rounded-2xl p-6 shadow-2xl space-y-5">
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+      <div className="relative w-full max-w-md bg-cinematic-900 border border-cinematic-700 rounded-2xl p-6 shadow-2xl space-y-5">
+        <div className="flex items-center justify-between border-b border-cinematic-700 pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-gold-500/10 text-gold-400 border border-gold-500/20">
+            <div className="p-2 rounded-xl bg-prime-500/15 text-prime-400 border border-prime-500/30">
               <Keyboard className="w-5 h-5" />
             </div>
             <div>
@@ -49,10 +49,10 @@ export function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShortcutsMod
           {SHORTCUTS.map((item) => (
             <div
               key={item.key}
-              className="flex items-center justify-between p-2.5 rounded-xl bg-cinematic-950/60 border border-white/5 text-xs"
+              className="flex items-center justify-between p-2.5 rounded-xl bg-cinematic-950/60 border border-cinematic-700/60 text-xs"
             >
               <span className="text-slate-300">{item.description}</span>
-              <kbd className="px-2 py-1 rounded bg-cinematic-800 text-gold-400 font-mono font-bold border border-white/10 text-[11px] shadow-sm">
+              <kbd className="px-2 py-1 rounded bg-cinematic-800 text-prime-400 font-mono font-bold border border-cinematic-700 text-[11px] shadow-sm">
                 {item.key}
               </kbd>
             </div>
@@ -62,7 +62,7 @@ export function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShortcutsMod
         <div className="pt-2 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-gold-500 text-cinematic-950 font-bold text-xs hover:bg-gold-400 transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-netflix-500 text-white font-bold text-xs hover:bg-netflix-400 transition-colors cursor-pointer shadow-md shadow-netflix-500/20"
           >
             Got it
           </button>

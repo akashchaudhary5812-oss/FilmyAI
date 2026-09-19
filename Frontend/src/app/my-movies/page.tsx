@@ -52,7 +52,7 @@ function MyMoviesContent() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-6">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-gold-400">
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-netflix-400">
             <Clapperboard className="w-4 h-4" />
             <span>Studio Production Workspace</span>
           </div>
@@ -73,12 +73,12 @@ function MyMoviesContent() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-3 border-b border-white/5 pb-2">
+      <div className="flex items-center gap-3 border-b border-cinematic-700 pb-2">
         <button
           onClick={() => setActiveTab("uploads")}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors ${
             activeTab === "uploads"
-              ? "bg-gold-500/15 text-gold-400 border border-gold-500/30"
+              ? "bg-netflix-500/15 text-netflix-400 border border-netflix-500/30"
               : "text-slate-400 hover:text-white"
           }`}
         >
@@ -90,7 +90,7 @@ function MyMoviesContent() {
           onClick={() => setActiveTab("saved")}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold uppercase tracking-wider transition-colors ${
             activeTab === "saved"
-              ? "bg-gold-500/15 text-gold-400 border border-gold-500/30"
+              ? "bg-netflix-500/15 text-netflix-400 border border-netflix-500/30"
               : "text-slate-400 hover:text-white"
           }`}
         >

@@ -101,10 +101,10 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <Link
             href={`/watch/${movie.id}`}
-            className="flex items-center gap-3 px-6 py-3.5 rounded-full bg-gold-500 hover:bg-gold-400 text-cinematic-950 font-black text-sm tracking-wide shadow-2xl shadow-gold-500/30 backdrop-blur-md transform hover:scale-105 transition-all group"
+            className="flex items-center gap-3 px-6 py-3.5 rounded-full bg-netflix-500 hover:bg-netflix-400 text-white font-bold text-sm tracking-wide shadow-2xl shadow-netflix-500/40 backdrop-blur-md transform hover:scale-105 transition-all group"
           >
-            <div className="w-8 h-8 rounded-full bg-cinematic-950 text-gold-400 flex items-center justify-center">
-              <Play className="w-4 h-4 fill-gold-400 ml-0.5" />
+            <div className="w-8 h-8 rounded-full bg-black/30 text-white flex items-center justify-center">
+              <Play className="w-4 h-4 fill-white ml-0.5" />
             </div>
             <span>
               {currentProgress && currentProgress.progressPercent > 5
@@ -116,13 +116,13 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
 
         {/* Cinema Tech Spec Badges in Corner */}
         <div className="absolute top-6 right-6 z-20 hidden md:flex items-center gap-2">
-          <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-black/60 border border-white/20 text-slate-200 backdrop-blur-md">
+          <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-black/60 border border-cinematic-700 text-slate-200 backdrop-blur-md">
             4K ULTRA HD
           </span>
-          <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-black/60 border border-white/20 text-slate-200 backdrop-blur-md">
+          <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-black/60 border border-cinematic-700 text-slate-200 backdrop-blur-md">
             HDR10+
           </span>
-          <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-black/60 border border-gold-500/40 text-gold-400 backdrop-blur-md">
+          <span className="px-2.5 py-1 rounded text-[10px] font-mono font-bold bg-black/60 border border-prime-500/40 text-prime-400 backdrop-blur-md">
             5.1 SURROUND
           </span>
         </div>
@@ -133,7 +133,7 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* Left Column: Poster & Quick Actions */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="relative aspect-[2/3] w-full max-w-sm mx-auto rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-cinematic-900">
+            <div className="relative aspect-[2/3] w-full max-w-sm mx-auto rounded-2xl overflow-hidden shadow-2xl border border-cinematic-700 bg-cinematic-900">
               {movie.posterUrl && !isVideo && !imageError ? (
                 <Image
                   src={movie.posterUrl}
@@ -145,7 +145,7 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
                 />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-cinematic-900">
-                  <Clapperboard className="w-16 h-16 text-gold-400/40 mb-3" />
+                  <Clapperboard className="w-16 h-16 text-slate-500 mb-3" />
                   <span className="text-sm font-bold text-white">{movie.title}</span>
                 </div>
               )}
@@ -156,9 +156,9 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
               <Link href={`/watch/${movie.id}`} className="block">
                 <Button
                   variant="primary"
-                  className="w-full py-3.5 text-base bg-gold-500 hover:bg-gold-400 text-cinematic-950 font-black shadow-lg shadow-gold-500/25"
+                  className="w-full py-3.5 text-base font-bold shadow-lg shadow-netflix-500/25"
                 >
-                  <Play className="w-5 h-5 fill-cinematic-950 mr-2" />
+                  <Play className="w-5 h-5 fill-white mr-2" />
                   <span>
                     {currentProgress && currentProgress.progressPercent > 5
                       ? "Resume Playback"
@@ -182,7 +182,7 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
                 >
                   {isSaved ? (
                     <>
-                      <BookmarkCheck className="w-4 h-4 mr-2 text-gold-400" />
+                      <BookmarkCheck className="w-4 h-4 mr-2 text-netflix-400" />
                       In My Movies
                     </>
                   ) : (
@@ -250,15 +250,15 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
                 {movie.title}
               </h1>
 
-              <p className="text-base text-gold-400 font-medium mt-1">
-                A film directed by {movie.director}
+              <p className="text-base text-slate-400 font-medium mt-1">
+                A film directed by <span className="text-white font-semibold">{movie.director}</span>
               </p>
             </div>
 
             {/* Structured Specifications Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="p-4 rounded-xl glass-panel flex items-start gap-3">
-                <div className="p-2.5 rounded-lg bg-gold-500/10 text-gold-400">
+                <div className="p-2.5 rounded-lg bg-prime-500/10 text-prime-400">
                   <Users className="w-5 h-5" />
                 </div>
                 <div>
@@ -290,7 +290,7 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
               </div>
 
               <div className="p-4 rounded-xl glass-panel flex items-start gap-3">
-                <div className="p-2.5 rounded-lg bg-amber-500/10 text-amber-400">
+                <div className="p-2.5 rounded-lg bg-prime-500/10 text-prime-400">
                   <Calendar className="w-5 h-5" />
                 </div>
                 <div>
@@ -303,7 +303,7 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
             {/* Summary / Logline */}
             <div className="p-6 rounded-2xl glass-panel space-y-3">
               <h3 className="text-lg font-bold text-white font-display flex items-center gap-2">
-                <FileText className="w-5 h-5 text-gold-400" />
+                <FileText className="w-5 h-5 text-netflix-400" />
                 <span>Synopsis & Overview</span>
               </h3>
               <p className="text-slate-300 text-sm sm:text-base leading-relaxed">

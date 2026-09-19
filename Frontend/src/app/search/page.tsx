@@ -27,7 +27,7 @@ export default function SearchPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Search Header */}
       <div className="max-w-2xl mx-auto text-center space-y-4">
-        <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-gold-400">
+        <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-prime-400">
           <Clapperboard className="w-4 h-4" />
           <span>Multi-Parametric Cinema Search</span>
         </div>
@@ -47,7 +47,7 @@ export default function SearchPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search by title, director, actor, or genre..."
             autoFocus
-            className="w-full bg-cinematic-900/90 border border-white/15 rounded-2xl py-3.5 pl-12 pr-10 text-sm sm:text-base text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 focus:ring-2 focus:ring-gold-500/20 shadow-xl transition-all"
+            className="w-full bg-cinematic-900/90 border border-cinematic-700 rounded-2xl py-3.5 pl-12 pr-10 text-sm sm:text-base text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 focus:ring-2 focus:ring-prime-500/20 shadow-xl transition-all"
           />
           {searchTerm && (
             <button

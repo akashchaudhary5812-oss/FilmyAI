@@ -67,7 +67,7 @@ export default function HomePage() {
       {movies.length === 0 ? (
         <div className="max-w-4xl mx-auto px-4 py-12">
           <div className="p-8 rounded-3xl glass-panel text-center space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-gold-500/10 text-gold-400 mx-auto flex items-center justify-center border border-gold-500/20">
+            <div className="w-14 h-14 rounded-2xl bg-netflix-500/15 text-netflix-400 mx-auto flex items-center justify-center border border-netflix-500/30">
               <Clapperboard className="w-7 h-7" />
             </div>
             <h2 className="text-2xl font-bold text-white font-display">
@@ -99,7 +99,7 @@ export default function HomePage() {
 
           {/* Authenticated User's Films */}
           {isAuthenticated && (
-            <div className="bg-cinematic-900/40 py-2 border-y border-white/5">
+            <div className="bg-cinematic-900/40 py-2 border-y border-cinematic-700">
               <MovieCarousel
                 title="Your Studio Productions"
                 subtitle={`Films and dossiers in ${user?.username}'s workspace`}

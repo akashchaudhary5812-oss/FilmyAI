@@ -175,7 +175,7 @@ export function FilmUploadForm() {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <label className="block text-xs font-mono uppercase tracking-wider text-slate-300">
-            Video Ingestion Method <span className="text-gold-400">*</span>
+            Video Ingestion Method <span className="text-netflix-400">*</span>
           </label>
           <span className="text-[11px] text-slate-400 flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
@@ -183,7 +183,7 @@ export function FilmUploadForm() {
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 p-1.5 bg-cinematic-950/80 rounded-2xl border border-white/10">
+        <div className="grid grid-cols-2 gap-3 p-1.5 bg-cinematic-950/80 rounded-2xl border border-cinematic-700">
           <button
             type="button"
             onClick={() => {
@@ -192,7 +192,7 @@ export function FilmUploadForm() {
             }}
             className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
               inputType === "upload"
-                ? "bg-gold-500 text-cinematic-950 shadow-lg shadow-gold-500/20 font-bold"
+                ? "bg-netflix-500 text-white shadow-lg shadow-netflix-500/25 font-bold"
                 : "text-slate-400 hover:text-white hover:bg-white/5"
             }`}
           >
@@ -208,7 +208,7 @@ export function FilmUploadForm() {
             }}
             className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 ${
               inputType === "url"
-                ? "bg-gold-500 text-cinematic-950 shadow-lg shadow-gold-500/20 font-bold"
+                ? "bg-netflix-500 text-white shadow-lg shadow-netflix-500/25 font-bold"
                 : "text-slate-400 hover:text-white hover:bg-white/5"
             }`}
           >
@@ -230,21 +230,21 @@ export function FilmUploadForm() {
           />
         </div>
       ) : (
-        <div className="p-6 rounded-2xl glass-panel border border-white/10 space-y-4 animate-in fade-in duration-200">
+        <div className="p-6 rounded-2xl glass-panel border border-cinematic-700 space-y-4 animate-in fade-in duration-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-gold-400" />
+              <Globe className="w-4 h-4 text-prime-400" />
               <h4 className="text-sm font-semibold text-white font-display">
                 Public / Authorized Video Stream URL
               </h4>
             </div>
-            <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-gold-500/10 text-gold-400 border border-gold-500/20">
+            <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-prime-500/10 text-prime-400 border border-prime-500/30">
               No Download Required
             </span>
           </div>
 
           <p className="text-xs text-slate-400 leading-relaxed">
-            Provide a direct public or authorized video URL (e.g. S3, Cloudinary, CDN, or trailer stream). FilmyAI safely streams and caches the footage temporarily into the unified <code className="text-gold-400 font-mono">ML_VIDEO</code> pipeline.
+            Provide a direct public or authorized video URL (e.g. S3, Cloudinary, CDN, or trailer stream). FilmyAI safely streams and caches the footage temporarily into the unified <code className="text-netflix-400 font-mono">ML_VIDEO</code> pipeline.
           </p>
 
           <div className="space-y-2">
@@ -258,7 +258,7 @@ export function FilmUploadForm() {
                 }}
                 onBlur={() => handleValidateUrl(videoUrl)}
                 placeholder="https://storage.googleapis.com/sample-videos/cinematic_trailer.mp4"
-                className="w-full bg-cinematic-950/90 border border-white/10 rounded-xl py-3 pl-4 pr-28 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 transition-colors font-mono text-xs"
+                className="w-full bg-cinematic-950/90 border border-white/10 rounded-xl py-3 pl-4 pr-28 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 transition-colors font-mono text-xs"
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2">
                 <Button
@@ -318,14 +318,14 @@ export function FilmUploadForm() {
       {/* Primary Metadata Form */}
       <div className="p-6 rounded-2xl glass-panel space-y-6">
         <h3 className="text-base font-bold text-white font-display flex items-center gap-2 border-b border-white/10 pb-3">
-          <Clapperboard className="w-4 h-4 text-gold-400" />
+          <Clapperboard className="w-4 h-4 text-netflix-400" />
           <span>Production Specifications</span>
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-              Film Title <span className="text-gold-400">*</span>
+              Film Title <span className="text-netflix-400">*</span>
             </label>
             <input
               type="text"
@@ -333,13 +333,13 @@ export function FilmUploadForm() {
               onChange={(e) => setFilmName(e.target.value)}
               placeholder="e.g. Oppenheimer"
               required
-              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 transition-colors"
+              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 transition-colors"
             />
           </div>
 
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-              Director Name <span className="text-gold-400">*</span>
+              Director Name <span className="text-netflix-400">*</span>
             </label>
             <input
               type="text"
@@ -347,18 +347,18 @@ export function FilmUploadForm() {
               onChange={(e) => setDirectorName(e.target.value)}
               placeholder="e.g. Christopher Nolan"
               required
-              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 transition-colors"
+              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 transition-colors"
             />
           </div>
 
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-              Genre <span className="text-gold-400">*</span>
+              Genre <span className="text-netflix-400">*</span>
             </label>
             <select
               value={genre}
               onChange={(e) => setGenre(e.target.value as FilmGenre)}
-              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white focus:outline-none focus:border-gold-500 transition-colors"
+              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white focus:outline-none focus:border-prime-500 transition-colors"
             >
               {genres.map((g) => (
                 <option key={g} value={g} className="bg-cinematic-900 text-white">
@@ -370,7 +370,7 @@ export function FilmUploadForm() {
 
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-              Production Budget <span className="text-gold-400">*</span>
+              Production Budget <span className="text-netflix-400">*</span>
             </label>
             <input
               type="text"
@@ -378,13 +378,13 @@ export function FilmUploadForm() {
               onChange={(e) => setBudget(e.target.value)}
               placeholder="e.g. $100,000,000"
               required
-              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 transition-colors"
+              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 transition-colors"
             />
           </div>
 
           <div className="sm:col-span-2">
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-              Principal Casting & Ensembles <span className="text-gold-400">*</span>
+              Principal Casting &amp; Ensembles <span className="text-netflix-400">*</span>
             </label>
             <input
               type="text"
@@ -392,13 +392,13 @@ export function FilmUploadForm() {
               onChange={(e) => setCasting(e.target.value)}
               placeholder="e.g. Cillian Murphy, Emily Blunt, Matt Damon"
               required
-              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 transition-colors"
+              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 transition-colors"
             />
           </div>
 
           <div className="sm:col-span-2">
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-              Production Houses / Studios <span className="text-gold-400">*</span>
+              Production Houses / Studios <span className="text-netflix-400">*</span>
             </label>
             <input
               type="text"
@@ -406,7 +406,7 @@ export function FilmUploadForm() {
               onChange={(e) => setProductionHouses(e.target.value)}
               placeholder="e.g. Syncopy, Universal Pictures"
               required
-              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 transition-colors"
+              className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 transition-colors"
             />
           </div>
         </div>
@@ -418,7 +418,7 @@ export function FilmUploadForm() {
           <h3 className="text-base font-bold text-white font-display">
             Story, Script & Synopsis
           </h3>
-          <span className="text-xs text-gold-400 font-mono">Recommended for LLM Intelligence</span>
+          <span className="text-xs text-prime-400 font-mono">Recommended for LLM Intelligence</span>
         </div>
 
         <div>
@@ -430,7 +430,7 @@ export function FilmUploadForm() {
             onChange={(e) => setSummary(e.target.value)}
             rows={3}
             placeholder="A gripping historical drama detailing the development of the atomic bomb and its geopolitical aftermath..."
-            className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-gold-500 transition-colors resize-none"
+            className="w-full bg-cinematic-950/80 border border-white/10 rounded-xl py-2.5 px-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-prime-500 transition-colors resize-none"
           />
         </div>
 

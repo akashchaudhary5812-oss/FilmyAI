@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    --background: #00061a;
-    --foreground: #e8eaf6;
+    --background: #0B0F19;
+    --foreground: #FFFFFF;
   }
 
   body {
@@ -15,30 +15,30 @@
     overflow-x: hidden;
   }
 
-  /* Light text on deep navy Disney+/Jio surfaces */
+  /* Crisp white headings for cinematic streaming contrast */
   h1, h2, h3, h4, h5, h6 {
-    color: #eef0ff;
+    color: #FFFFFF;
   }
 }
 
-/* Custom smooth scrollbar — Hotstar deep blue + yellow accent */
+/* Custom smooth scrollbar — Dark track with subtle Netflix red / Prime blue accent */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #01147C;
+  background: #0B0F19;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #C8B700;
+  background: #252B36;
   border-radius: 9999px;
-  border: 1px solid #0C2575;
+  border: 1px solid #141A24;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #e6d200;
+  background: #E50914;
 }
 
 /* Hide scrollbar for clean carousels while keeping functionality */
@@ -50,55 +50,55 @@
   scrollbar-width: none;
 }
 
-/* Glassmorphism studio card — Hotstar deep navy */
+/* Cinematic Glassmorphism studio panels — Netflix navy base with subtle edge lighting */
 .glass-panel {
-  background: rgba(1, 20, 124, 0.55);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(200, 183, 0, 0.18);
-  box-shadow: 0 10px 25px -5px rgba(0, 6, 26, 0.45), 0 8px 10px -6px rgba(1, 20, 124, 0.25);
+  background: rgba(20, 26, 36, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(37, 43, 54, 0.85);
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.65);
 }
 
 .glass-panel-gold {
-  background: rgba(12, 37, 117, 0.75);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(200, 183, 0, 0.35);
-  box-shadow: 0 10px 25px -5px rgba(200, 183, 0, 0.15);
+  background: rgba(25, 34, 49, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(229, 9, 20, 0.22);
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.65), 0 0 20px -5px rgba(229, 9, 20, 0.12);
 }
 
 .glass-panel-neural {
-  background: rgba(10, 40, 133, 0.7);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(19, 104, 120, 0.4);
-  box-shadow: 0 10px 25px -5px rgba(19, 104, 120, 0.18);
+  background: rgba(20, 26, 36, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 168, 225, 0.25);
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.65), 0 0 20px -5px rgba(0, 168, 225, 0.12);
 }
 
-/* Hotstar / Jio brand gradient text */
+/* Netflix Red & Prime Blue brand gradient texts */
 .gold-gradient-text {
-  background: linear-gradient(135deg, #e6d200 0%, #C8B700 50%, #a89800 100%);
+  background: linear-gradient(135deg, #FFFFFF 20%, #E50914 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .neural-gradient-text {
-  background: linear-gradient(135deg, #1aA090 0%, #136878 50%, #0d4d5a 100%);
+  background: linear-gradient(135deg, #FFFFFF 20%, #00A8E1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* Translucent borders adapted for deep navy theme */
+/* Dark slate borders for cinematic streaming depth */
 .border-white\/10 {
-  border-color: rgba(200, 183, 0, 0.12) !important;
+  border-color: rgba(37, 43, 54, 0.85) !important;
 }
 
 .border-white\/5 {
-  border-color: rgba(200, 183, 0, 0.06) !important;
+  border-color: rgba(37, 43, 54, 0.5) !important;
 }
 
 .border-white\/20 {
-  border-color: rgba(200, 183, 0, 0.22) !important;
+  border-color: rgba(37, 43, 54, 1) !important;
 }
 
 /* Keep video player in full-screen cinema mode dark for proper theater viewing */

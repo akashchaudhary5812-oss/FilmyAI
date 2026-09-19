@@ -16,7 +16,7 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
       }`}
     >
       {isAssistant && (
-        <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-gold-600 to-amber-400 flex items-center justify-center text-cinematic-950 flex-shrink-0 mt-0.5 shadow-sm">
+        <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-prime-600 to-prime-400 flex items-center justify-center text-white flex-shrink-0 mt-0.5 shadow-sm">
           <Sparkles className="w-3.5 h-3.5" />
         </div>
       )}
@@ -24,23 +24,23 @@ export function ChatMessageItem({ message }: ChatMessageItemProps) {
       <div
         className={`max-w-[85%] p-3.5 rounded-2xl ${
           isAssistant
-            ? "bg-cinematic-900 border border-white/10 text-slate-200 rounded-tl-sm"
-            : "bg-gradient-to-r from-gold-500 to-amber-500 text-cinematic-950 font-medium rounded-tr-sm shadow-md"
+            ? "bg-cinematic-900 border border-cinematic-700 text-slate-200 rounded-tl-sm"
+            : "bg-netflix-500 text-white font-medium rounded-tr-sm shadow-md shadow-netflix-500/20"
         }`}
       >
         <p className="whitespace-pre-wrap">{message.content}</p>
         
         {/* Source Citations Badges */}
         {isAssistant && message.sources && message.sources.length > 0 && (
-          <div className="mt-2.5 pt-2 border-t border-white/10 space-y-1">
-            <span className="text-[9px] font-mono text-amber-400/90 font-semibold block uppercase tracking-wider">
+          <div className="mt-2.5 pt-2 border-t border-cinematic-700 space-y-1">
+            <span className="text-[9px] font-mono text-prime-400 font-semibold block uppercase tracking-wider">
               Grounded Sources:
             </span>
             <div className="flex flex-wrap gap-1">
               {message.sources.map((src, idx) => (
                 <span
                   key={idx}
-                  className="inline-flex items-center gap-1 text-[9px] font-mono bg-white/5 border border-white/10 text-slate-300 px-1.5 py-0.5 rounded"
+                  className="inline-flex items-center gap-1 text-[9px] font-mono bg-cinematic-850 border border-cinematic-700 text-slate-300 px-1.5 py-0.5 rounded"
                   title={src.excerpt || `${src.section} > ${src.subsection || ""}`}
                 >
                   <span className="text-amber-400">§</span>

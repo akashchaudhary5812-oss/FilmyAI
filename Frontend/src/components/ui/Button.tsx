@@ -23,19 +23,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 focus-visible:ring-offset-cinematic-950 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] select-none rounded-lg cursor-pointer";
+      "inline-flex items-center justify-center font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-netflix-500 focus-visible:ring-offset-2 focus-visible:ring-offset-cinematic-950 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] select-none rounded-lg cursor-pointer";
 
     const variants = {
       primary:
-        "bg-gradient-to-r from-gold-500 to-amber-600 text-cinematic-950 font-semibold hover:from-gold-400 hover:to-amber-500 shadow-lg shadow-gold-500/20",
+        "bg-netflix-500 hover:bg-netflix-400 text-white font-semibold shadow-lg shadow-netflix-500/25 hover:shadow-netflix-500/40 transition-all",
       secondary:
-        "bg-cinematic-800 text-slate-100 hover:bg-cinematic-700 border border-white/10 hover:border-white/20",
+        "bg-cinematic-900 text-slate-100 hover:bg-cinematic-850 border border-cinematic-700 hover:border-prime-500/40 hover:text-white shadow-sm transition-all",
       neural:
-        "bg-gradient-to-r from-neural-500 to-indigo-600 text-white font-semibold hover:from-neural-400 hover:to-indigo-500 shadow-lg shadow-neural-500/25",
+        "bg-prime-500 hover:bg-prime-400 text-white font-semibold shadow-lg shadow-prime-500/25 hover:shadow-prime-500/40 transition-all",
       outline:
-        "border border-white/20 text-slate-200 hover:bg-white/5 hover:border-white/40",
-      ghost: "text-slate-300 hover:bg-white/5 hover:text-white",
-      danger: "bg-red-600/80 text-white hover:bg-red-500 border border-red-500/30",
+        "border border-cinematic-700 text-slate-200 hover:bg-cinematic-900 hover:border-white/40 hover:text-white transition-all",
+      ghost: "text-slate-300 hover:bg-cinematic-900/80 hover:text-white transition-colors",
+      danger: "bg-red-700/80 text-white hover:bg-red-600 border border-red-500/30 transition-colors",
     };
 
     const sizes = {

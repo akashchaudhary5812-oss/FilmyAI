@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 export default function NotFound() {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
-      <div className="w-16 h-16 rounded-2xl bg-cinematic-800 text-gold-400 flex items-center justify-center mb-6 border border-white/10">
+      <div className="w-16 h-16 rounded-2xl bg-cinematic-800 text-netflix-400 flex items-center justify-center mb-6 border border-white/10">
         <Clapperboard className="w-8 h-8" />
       </div>
       <h1 className="text-4xl sm:text-6xl font-black text-white font-display tracking-tight mb-3">

@@ -16,7 +16,7 @@ export default function MovieWatchRedirectPage() {
 
   return (
     <div className="w-full h-screen bg-cinematic-950 flex items-center justify-center">
-      <div className="w-10 h-10 border-4 border-gold-500/30 border-t-gold-400 rounded-full animate-spin" />
+      <div className="w-10 h-10 border-4 border-netflix-500/30 border-t-netflix-500 rounded-full animate-spin" />
     </div>
   );
 }
