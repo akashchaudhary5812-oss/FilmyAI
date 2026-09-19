@@ -146,7 +146,11 @@ class VideoEngineConnector:
                 lighting_style_distribution=cin_prof.get("lighting_style_breakdown", {}),
                 composition_distribution=cin_prof.get("composition_breakdown", {}),
                 keyframe_paths=keyframes,
-                top_shots_summary=top_shots
+                top_shots_summary=top_shots,
+                # v3.0: Full shot detail list for deep scene scoring
+                all_shots_detail=detailed_shots,
+                audio_summary=report.get("audio_analysis", {}),
+                pacing_metrics=report.get("pacing_metrics", {})
             )
         except Exception as e:
             return VideoCinematographyEvidence(

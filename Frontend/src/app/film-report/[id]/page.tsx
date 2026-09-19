@@ -9,6 +9,10 @@ import { FinalFilmIntelligenceReport } from "@/types/report";
 import { ReportHeader } from "@/components/report/ReportHeader";
 import { ExecutiveSummaryView } from "@/components/report/ExecutiveSummaryView";
 import { CinematographySection } from "@/components/report/CinematographySection";
+import { ScenePointsSection } from "@/components/report/ScenePointsSection";
+import { SceneTimelineSection } from "@/components/report/SceneTimelineSection";
+import { CastPerformanceSection } from "@/components/report/CastPerformanceSection";
+import { PacingAndJourneySection } from "@/components/report/PacingAndJourneySection";
 import { CommercialMetrics } from "@/components/report/CommercialMetrics";
 import { CreativeAssessment } from "@/components/report/CreativeAssessment";
 import { StrategicRoadmap } from "@/components/report/StrategicRoadmap";
@@ -173,6 +177,10 @@ export default function FilmReportPage() {
         <div className="lg:col-span-2 space-y-8">
           <ExecutiveSummaryView report={report} />
           <CinematographySection report={report} />
+          <ScenePointsSection report={report} />
+          <SceneTimelineSection report={report} />
+          <CastPerformanceSection report={report} />
+          <PacingAndJourneySection report={report} />
           <CommercialMetrics report={report} />
           <CreativeAssessment report={report} />
           <StrategicRoadmap report={report} />

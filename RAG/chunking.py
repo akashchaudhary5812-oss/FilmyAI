@@ -313,19 +313,238 @@ class ReportChunker:
         # 9. Raw Video Metrics (if available)
         # ----------------------------------------------------
         raw_video = data.get("raw_video_metrics", {})
-        if raw_video and raw_video.get("status") == "completed":
+        if raw_video and raw_video.get("status") in ("available", "completed"):
             vid_lines = [
                 f"Total Video Shots: {raw_video.get('total_shots', 'N/A')}",
                 f"Pacing & Rhythm: {raw_video.get('pacing_rhythm', 'N/A')}",
-                f"FPS: {raw_video.get('fps', 'N/A')}",
                 f"Duration: {raw_video.get('duration_seconds', 'N/A')}s",
-                f"Audio RMS Level: {raw_video.get('audio_rms_level', 'N/A')}"
+                f"Predominant Shot Scale: {raw_video.get('predominant_shot_scale', 'N/A')}",
+                f"Predominant Lighting: {raw_video.get('predominant_lighting_style', 'N/A')}",
+                f"Audio Mode: {raw_video.get('audio_speech_activity', 'N/A')}"
             ]
             chunks.append(make_chunk(
                 section="Cinematography",
                 subsection="Video Engine Metrics",
                 content=f"Multimodal Video Signal Measurements:\n" + "\n".join(vid_lines),
-                metrics=raw_video
+                metrics={k: v for k, v in raw_video.items() if not isinstance(v, (dict, list))}
             ))
 
+        # ----------------------------------------------------
+        # v3.0 NEW: Cast Performance
+        # ----------------------------------------------------
+        cast_perf = data.get("cast_performance", {}) or {}
+        cast_items = cast_perf.get("cast_items", []) if isinstance(cast_perf, dict) else []
+        if cast_items:
+            for ci in cast_items:
+                actor = ci.get("actor_name", "Unknown Actor")
+                role = ci.get("role_category", "OTHER")
+                overall = ci.get("overall_performance_score")
+                scores = ci.get("scores", {}) or {}
+                dims = scores.get("dimensions_available", [])
+                ev = ci.get("evidence", [])
+                lines = [
+                    f"Cast Performance: {actor} ({role})",
+                    f"Overall Score: {overall if overall is not None else 'null (insufficient evidence)'}",
+                    f"Character: {ci.get('character_name', 'Unresolved')}",
+                    f"Confidence: {ci.get('confidence', 'LOW')}",
+                    f"Acting Score: {scores.get('acting_score', 'null')}",
+                    f"Emotional Connect: {scores.get('emotional_connect_score', 'null')}",
+                    f"Dialogue Delivery: {scores.get('dialogue_delivery_score', 'null')}",
+                    f"Character Arc: {scores.get('character_arc_score', 'null')}",
+                    f"Dimensions with Evidence: {', '.join(dims) if dims else 'none'}",
+                ]
+                if ev:
+                    lines.append(f"Evidence: {'; '.join(ev[:3])}")
+                if ci.get("improvement_notes"):
+                    lines.append(f"Improvement Notes: {ci['improvement_notes']}")
+                chunks.append(make_chunk(
+                    section="Cast Performance",
+                    subsection=f"Actor: {actor}",
+                    content="\n".join(lines),
+                    metrics={"overall_performance_score": overall, "role_category": role},
+                    confidence=ci.get("overall_performance_score"),
+                ))
+
+        overall_cast_text = cast_perf.get("overall_cast_assessment") if isinstance(cast_perf, dict) else None
+        if overall_cast_text:
+            chunks.append(make_chunk(
+                section="Cast Performance",
+                subsection="Overall Cast Assessment",
+                content=f"Cast Performance Summary for '{film_name}':\n{overall_cast_text}",
+            ))
+
+        # ----------------------------------------------------
+        # v3.0 NEW: Film High Points
+        # ----------------------------------------------------
+        high_pts = data.get("film_high_points", []) or []
+        if high_pts:
+            for hp in high_pts:
+                ts = f"{hp.get('timestamp_start', '')} - {hp.get('timestamp_end', '')}"
+                lines = [
+                    f"Film High Point: {ts}",
+                    f"Scene Score: {hp.get('scene_score', 'N/A')}/10",
+                    f"Description: {hp.get('scene_description', 'N/A')}",
+                    f"Why It Works: {hp.get('why_it_works', 'N/A')}",
+                    f"Audience Impact: {hp.get('audience_impact', 'N/A')}",
+                    f"Confidence: {hp.get('confidence', 'LOW')}",
+                ]
+                if hp.get("evidence"):
+                    lines.append(f"Evidence: {'; '.join(hp['evidence'][:3])}")
+                chunks.append(make_chunk(
+                    section="Scene Analysis",
+                    subsection="Film High Points",
+                    content="\n".join(lines),
+                    timestamps=[ts],
+                    severity="positive",
+                    confidence=hp.get("scene_score"),
+                ))
+
+        # ----------------------------------------------------
+        # v3.0 NEW: Film Medium Points
+        # ----------------------------------------------------
+        medium_pts = data.get("film_medium_points", []) or []
+        if medium_pts:
+            for mp in medium_pts:
+                ts = f"{mp.get('timestamp_start', '')} - {mp.get('timestamp_end', '')}"
+                lines = [
+                    f"Film Medium Point: {ts}",
+                    f"Scene Score: {mp.get('scene_score', 'N/A')}/10",
+                    f"What Works: {mp.get('what_works', 'N/A')}",
+                    f"What Is Average: {mp.get('what_is_average', 'N/A')}",
+                    f"Improvement Area: {mp.get('improvement_area', 'N/A')}",
+                ]
+                chunks.append(make_chunk(
+                    section="Scene Analysis",
+                    subsection="Film Medium Points",
+                    content="\n".join(lines),
+                    timestamps=[ts],
+                    severity="medium",
+                ))
+
+        # ----------------------------------------------------
+        # v3.0 NEW: Film Low Points
+        # ----------------------------------------------------
+        low_pts = data.get("film_low_points", []) or []
+        if low_pts:
+            for lp in low_pts:
+                ts = f"{lp.get('timestamp_start', '')} - {lp.get('timestamp_end', '')}"
+                lines = [
+                    f"Film Low Point: {ts}",
+                    f"Scene Score: {lp.get('scene_score', 'N/A')}/10",
+                    f"Primary Issue: {lp.get('primary_issue', 'N/A')}",
+                    f"Affected Category: {lp.get('affected_category', 'OTHER')}",
+                    f"Audience Effect: {lp.get('audience_effect', 'N/A')}",
+                    f"Recommendation: {lp.get('recommendation', 'N/A')}",
+                    f"Confidence: {lp.get('confidence', 'LOW')}",
+                ]
+                if lp.get("evidence"):
+                    lines.append(f"Evidence: {'; '.join(lp['evidence'][:2])}")
+                chunks.append(make_chunk(
+                    section="Scene Analysis",
+                    subsection="Film Low Points",
+                    content="\n".join(lines),
+                    timestamps=[ts],
+                    severity="high",
+                    confidence=lp.get("scene_score"),
+                ))
+
+        # ----------------------------------------------------
+        # v3.0 NEW: Scene Performance Timeline (summary chunk)
+        # ----------------------------------------------------
+        spt = data.get("scene_performance_timeline", {}) or {}
+        if spt and spt.get("entries"):
+            entries = spt["entries"]
+            avg_sc = spt.get("average_scene_score")
+            lines = [
+                f"Scene Performance Timeline for '{film_name}':",
+                f"Total Scenes Evaluated: {spt.get('total_scenes_evaluated', len(entries))}",
+                f"Film Duration: {spt.get('film_duration_sec', 0):.0f}s",
+                f"Average Scene Score: {avg_sc if avg_sc else 'N/A'}",
+                f"Score Std Dev: {spt.get('score_std_deviation', 'N/A')}",
+                f"Timeline Confidence: {spt.get('confidence', 'LOW')}",
+                "Entries (first 15):",
+            ]
+            for e in entries[:15]:
+                sc = e.get("scene_score")
+                sc_str = f"{sc:.1f}" if sc is not None else "N/A"
+                lines.append(f"  {e.get('timestamp_range', 'N/A')}: score={sc_str}, pacing={e.get('pacing_label', 'N/A')}, shots={e.get('shot_count', 0)}")
+            chunks.append(make_chunk(
+                section="Scene Analysis",
+                subsection="Scene Performance Timeline",
+                content="\n".join(lines),
+                metrics={"average_scene_score": avg_sc, "total_scenes": len(entries)},
+            ))
+
+        # ----------------------------------------------------
+        # v3.0 NEW: Character Emotional Journey
+        # ----------------------------------------------------
+        cej = data.get("character_emotional_journey", {}) or {}
+        if cej and cej.get("characters"):
+            cej_lines = [
+                f"Character Emotional Journey for '{film_name}':",
+                f"Film Emotional Progression: {cej.get('film_emotional_progression', 'N/A')}",
+                f"Climax Timestamp: {cej.get('climax_timestamp', 'N/A')}",
+                f"Resolution Quality: {cej.get('resolution_quality', 'N/A')}",
+                f"Emotional Consistency: {cej.get('emotional_consistency', 'N/A')}",
+            ]
+            for ch in cej.get("characters", []):
+                cej_lines.append(
+                    f"Character: {ch.get('character_name', 'N/A')} ({ch.get('actor_name', 'N/A')}) "
+                    f"| Start: {ch.get('starting_state', 'N/A')} → End: {ch.get('ending_state', 'N/A')} "
+                    f"| Arc Coherence: {ch.get('arc_coherence', 'N/A')} | Confidence: {ch.get('confidence', 'LOW')}"
+                )
+            chunks.append(make_chunk(
+                section="Character Analysis",
+                subsection="Emotional Journey & Character Arc",
+                content="\n".join(cej_lines),
+            ))
+
+        # ----------------------------------------------------
+        # v3.0 NEW: Pacing & Rhythm Map
+        # ----------------------------------------------------
+        prm = data.get("pacing_rhythm_map", {}) or {}
+        if prm:
+            pacing_lines = [
+                f"Pacing & Rhythm Map for '{film_name}':",
+                f"Overall Rhythm: {prm.get('overall_rhythm', 'N/A')}",
+                f"Pacing Consistency: {prm.get('pacing_consistency', 'N/A')}",
+                f"Transition Quality: {prm.get('transition_quality', 'N/A')}",
+                f"Confidence: {prm.get('confidence', 'LOW')}",
+            ]
+            if prm.get("drag_points"):
+                pacing_lines.append(f"Drag Points: {'; '.join(prm['drag_points'][:5])}")
+            if prm.get("peak_intensity_moments"):
+                pacing_lines.append(f"Peak Intensity Moments: {'; '.join(prm['peak_intensity_moments'][:5])}")
+            if prm.get("slow_sections"):
+                pacing_lines.append(f"Slow Sections: {'; '.join(prm['slow_sections'][:4])}")
+            chunks.append(make_chunk(
+                section="Cinematography",
+                subsection="Pacing & Rhythm Map",
+                content="\n".join(pacing_lines),
+                severity="medium" if prm.get("drag_points") else None,
+            ))
+
+        # ----------------------------------------------------
+        # v3.0 NEW: Technical & Creative Peaks
+        # ----------------------------------------------------
+        tcp = data.get("technical_creative_peaks", []) or []
+        if tcp:
+            for pk in tcp:
+                ts = pk.get("timestamp_range", "N/A")
+                lines = [
+                    f"Technical & Creative Peak: {ts}",
+                    f"Peak Score: {pk.get('overall_peak_score', 'N/A')}/10",
+                    f"Reason: {pk.get('reason', 'N/A')}",
+                    f"Dimensions Active: {', '.join(pk.get('dimensions_available', []))}",
+                    f"Confidence: {pk.get('confidence', 'LOW')}",
+                ]
+                chunks.append(make_chunk(
+                    section="Scene Analysis",
+                    subsection="Technical & Creative Peaks",
+                    content="\n".join(lines),
+                    timestamps=[ts],
+                    confidence=pk.get("overall_peak_score"),
+                ))
+
         return chunks
+

@@ -201,4 +201,55 @@ def get_report_styles():
         textColor=TEXT_MUTED
     ))
 
+    # v3.0 new styles
+    styles.add(ParagraphStyle(
+        name="ScoreBadgeHigh",
+        fontName="Helvetica-Bold",
+        fontSize=8.5,
+        leading=11,
+        textColor=colors.HexColor("#166534"),
+    ))
+
+    styles.add(ParagraphStyle(
+        name="ScoreBadgeMedium",
+        fontName="Helvetica-Bold",
+        fontSize=8.5,
+        leading=11,
+        textColor=colors.HexColor("#92400E"),
+    ))
+
+    styles.add(ParagraphStyle(
+        name="ScoreBadgeLow",
+        fontName="Helvetica-Bold",
+        fontSize=8.5,
+        leading=11,
+        textColor=colors.HexColor("#991B1B"),
+    ))
+
+    styles.add(ParagraphStyle(
+        name="TimelineCell",
+        fontName="Helvetica",
+        fontSize=8,
+        leading=10,
+        textColor=TEXT_MAIN,
+        alignment=1,
+    ))
+
+    styles.add(ParagraphStyle(
+        name="CardTitle",
+        fontName="Helvetica-Bold",
+        fontSize=9.5,
+        leading=12,
+        textColor=PRIMARY_DARK,
+        spaceAfter=2,
+    ))
+
+    styles.add(ParagraphStyle(
+        name="SmallMuted",
+        fontName="Helvetica",
+        fontSize=7.5,
+        leading=10,
+        textColor=TEXT_MUTED,
+    ))
+
     return styles

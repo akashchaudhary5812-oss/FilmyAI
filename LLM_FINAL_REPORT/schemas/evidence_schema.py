@@ -49,6 +49,19 @@ class VideoCinematographyEvidence(BaseModel):
     composition_distribution: Dict[str, Dict[str, Any]] = Field(default_factory=dict)
     keyframe_paths: List[str] = Field(default_factory=list)
     top_shots_summary: List[Dict[str, Any]] = Field(default_factory=list)
+    # v3.0: Full shot-level data retained for deep scene scoring
+    all_shots_detail: List[Dict[str, Any]] = Field(
+        default_factory=list,
+        description="Complete per-shot analysis records from ML_VIDEO for scene scoring"
+    )
+    audio_summary: Dict[str, Any] = Field(
+        default_factory=dict,
+        description="Full audio analysis summary from ML_VIDEO"
+    )
+    pacing_metrics: Dict[str, Any] = Field(
+        default_factory=dict,
+        description="Detailed pacing metrics from ML_VIDEO"
+    )
     error_message: Optional[str] = None
 
 

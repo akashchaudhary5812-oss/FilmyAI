@@ -2,6 +2,7 @@ import { FinalFilmIntelligenceReport } from "@/types/report";
 
 /**
  * Validates and normalizes report data structure for clean UI display.
+ * Full v3.0 evidence-driven support with null-safe fallbacks.
  */
 export function normalizeReport(raw: unknown): FinalFilmIntelligenceReport {
   const data = (raw && typeof raw === "object" ? raw : {}) as Partial<FinalFilmIntelligenceReport>;
@@ -27,6 +28,12 @@ export function normalizeReport(raw: unknown): FinalFilmIntelligenceReport {
       key_thesis:
         data.executive_summary?.key_thesis ||
         "The project exhibits strong thematic integrity, compelling pacing, and distinct audience resonance.",
+      strongest_creative_areas: data.executive_summary?.strongest_creative_areas || [],
+      weakest_creative_areas: data.executive_summary?.weakest_creative_areas || [],
+      top_cast_performances: data.executive_summary?.top_cast_performances || [],
+      major_scene_highs: data.executive_summary?.major_scene_highs || [],
+      major_scene_weaknesses: data.executive_summary?.major_scene_weaknesses || [],
+      confidence_limitations: data.executive_summary?.confidence_limitations || null,
     },
     cinematography_analysis: {
       visual_style_overview:
@@ -97,7 +104,27 @@ export function normalizeReport(raw: unknown): FinalFilmIntelligenceReport {
     key_scene_highlights: data.key_scene_highlights || [],
     raw_ml_predictions: data.raw_ml_predictions || {},
     raw_video_metrics: data.raw_video_metrics || {},
+
+    // v3.0 Deep Sections
+    cast_performance: data.cast_performance || null,
+    film_high_points: data.film_high_points || [],
+    film_medium_points: data.film_medium_points || [],
+    film_low_points: data.film_low_points || [],
+    scene_performance_timeline: data.scene_performance_timeline || null,
+    character_emotional_journey: data.character_emotional_journey || null,
+    pacing_rhythm_map: data.pacing_rhythm_map || null,
+    technical_creative_peaks: data.technical_creative_peaks || [],
+
+    high_point_count: data.high_point_count ?? (data.film_high_points?.length || 0),
+    medium_point_count: data.medium_point_count ?? (data.film_medium_points?.length || 0),
+    low_point_count: data.low_point_count ?? (data.film_low_points?.length || 0),
+    scene_scoring_method: data.scene_scoring_method || null,
+    timestamp_validation_status: data.timestamp_validation_status || "NOT_VALIDATED",
+    report_version: data.report_version || "3.0.0",
+
+    film_id: data.film_id,
     pdf_report_path: data.pdf_report_path,
     json_report_path: data.json_report_path,
+    rag_indexing_status: data.rag_indexing_status,
   };
 }
