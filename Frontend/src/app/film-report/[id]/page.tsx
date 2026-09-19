@@ -223,14 +223,14 @@ export default function FilmReportPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 pb-24">
+    <div className="max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-10 space-y-10 pb-32 min-h-screen">
       {/* Header Banner */}
-      <ReportHeader report={report} />
+      <ReportHeader report={report} movie={movie} />
 
-      {/* Main Grid: Report Sections (2/3) + Chatbot (1/3) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-        {/* Left 2 Columns: Structured Intelligence Dossier */}
-        <div className="lg:col-span-2 space-y-8">
+      {/* Main Grid: Report Sections (6/12) + Chatbot (6/12) for generous chatbot width */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 lg:gap-10 items-start">
+        {/* Left 6 Columns: Structured Intelligence Dossier */}
+        <div className="xl:col-span-6 space-y-10">
           <ExecutiveSummaryView report={report} />
           <CinematographySection report={report} />
           <ScenePointsSection report={report} />
@@ -242,8 +242,8 @@ export default function FilmReportPage() {
           <StrategicRoadmap report={report} />
         </div>
 
-        {/* Right 1 Column: Grounded RAG Chatbot Assistant */}
-        <div className="lg:col-span-1">
+        {/* Right 6 Columns: Wide Grounded RAG Chatbot Assistant */}
+        <div className="xl:col-span-6">
           <RagChatbot report={report} />
         </div>
       </div>
