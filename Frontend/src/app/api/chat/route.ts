@@ -4,11 +4,14 @@ import { FinalFilmIntelligenceReport } from "@/types/report";
 
 export async function POST(req: NextRequest) {
   try {
-    const body: ChatRequestPayload = await req.json();
-    const { film_id, filmTitle, conversation_id, reportContext, query } = body;
+    const body: ChatRequestPayload = (await req.json().catch(() => ({}))) || {};
+    const { film_id, filmTitle = "Film", conversation_id, reportContext, query = "" } = body;
 
     const report = reportContext as unknown as FinalFilmIntelligenceReport | undefined;
-    const effectiveFilmId = film_id || report?.report_id || filmTitle?.replace(/[^a-zA-Z0-9_-]/g, "_") || "default_film";
+    const effectiveFilmId =
+      film_id ||
+      report?.report_id ||
+      (filmTitle ? filmTitle.replace(/[^a-zA-Z0-9_-]/g, "_") : "default_film");
 
     let replyText = "";
     let sources: ChatSource[] = [];
@@ -20,42 +23,44 @@ export async function POST(req: NextRequest) {
       "http://127.0.0.1:8000"
     ).replace(/\/$/, "");
 
-    try {
-      const ragResponse = await fetch(`${reportApiBase}/api/v1/rag/query`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          film_id: effectiveFilmId,
-          question: query,
-          conversation_id: conversation_id || `conv_${effectiveFilmId}`,
-          film_name: filmTitle || report?.film_title,
-          top_k: 5,
-        }),
-        signal: AbortSignal.timeout(15000), // 15s timeout
-      });
+    if (query && query.trim()) {
+      try {
+        const ragResponse = await fetch(`${reportApiBase}/api/v1/rag/query`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            film_id: effectiveFilmId,
+            question: query,
+            conversation_id: conversation_id || `conv_${effectiveFilmId}`,
+            film_name: filmTitle || report?.film_title,
+            top_k: 5,
+          }),
+          signal: AbortSignal.timeout(6000), // 6s fast timeout
+        });
 
-      if (ragResponse.ok) {
-        const ragData = await ragResponse.json();
-        if (ragData.success && ragData.answer) {
-          replyText = ragData.answer;
-          sources = (ragData.sources || []).map((s: any) => ({
-            section: s.section,
-            subsection: s.subsection,
-            relevance_score: s.relevance_score,
-            chunk_id: s.chunk_id,
-            excerpt: s.excerpt,
-          }));
+        if (ragResponse.ok) {
+          const ragData = await ragResponse.json();
+          if (ragData.success && ragData.answer) {
+            replyText = ragData.answer;
+            sources = (ragData.sources || []).map((s: any) => ({
+              section: s.section || "Intelligence Report",
+              subsection: s.subsection || "Analysis",
+              relevance_score: s.relevance_score || 0.9,
+              chunk_id: s.chunk_id,
+              excerpt: s.excerpt,
+            }));
+          }
         }
+      } catch (ragErr) {
+        console.warn("Python RAG Service unreachable, using grounded report context fallback:", ragErr);
       }
-    } catch (ragErr) {
-      console.warn("Python RAG Service query unreachable, using report context fallback:", ragErr);
     }
 
     // 2. Grounded fallback using structured report context if RAG microservice is offline
     if (!replyText) {
-      const lowerQuery = query.toLowerCase();
+      const lowerQuery = (query || "").toLowerCase();
       if (lowerQuery.includes("strength") || lowerQuery.includes("strong") || lowerQuery.includes("best")) {
         const strengths = report?.creative_technical_assessment?.key_strengths?.join(", ") || "cohesive visual language and distinct thematic focus";
         replyText = `Based on the Filmy AI evaluation for '${filmTitle}', the primary creative strengths are: ${strengths}. The cinematography analysis also highlights ${report?.cinematography_analysis?.shot_composition_assessment?.toLowerCase() || "balanced shot framing"}.`;
@@ -75,7 +80,9 @@ export async function POST(req: NextRequest) {
         replyText = `Visual Analysis for '${filmTitle}': ${report?.cinematography_analysis?.visual_style_overview || "Refined visual grammar"} Lighting: ${report?.cinematography_analysis?.lighting_and_atmosphere || "Atmospheric naturalism"}. Pacing & Rhythm: ${report?.cinematography_analysis?.pacing_and_editing_rhythm || "Dynamic rhythmic cutting"}.`;
         sources = [{ section: "Cinematography", subsection: "Visual Style Overview", relevance_score: 0.91 }];
       } else {
-        replyText = `Regarding '${filmTitle}': The intelligence engine evaluates this project at an overall score of ${report?.executive_summary?.overall_film_rating || 8.5}/10. ${report?.executive_summary?.key_thesis || "The film demonstrates strong thematic cohesion and strategic audience appeal."}`;
+        const ratingVal = report?.executive_summary?.overall_film_rating ?? (report?.raw_ml_predictions as any)?.predicted_commercial_score;
+        const scoreStr = typeof ratingVal === "number" ? `${ratingVal.toFixed(1)}/10` : "standard studio baseline";
+        replyText = `Regarding '${filmTitle}': The intelligence engine evaluates this project at an overall score of ${scoreStr}. ${report?.executive_summary?.key_thesis || "The film demonstrates strong thematic cohesion and strategic audience appeal."}`;
         sources = [{ section: "Executive Summary", subsection: "Overview", relevance_score: 0.85 }];
       }
     }

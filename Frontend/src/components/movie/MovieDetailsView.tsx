@@ -18,6 +18,7 @@ import {
   AlertTriangle,
   Play,
   Tv,
+  Star,
 } from "lucide-react";
 import { Movie } from "@/types/movie";
 import { Badge } from "../ui/Badge";
@@ -239,6 +240,12 @@ export function MovieDetailsView({ movie }: MovieDetailsViewProps) {
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <Badge variant="gold">{movie.genre}</Badge>
                 <Badge variant="dark">Studio Release</Badge>
+                {movie.rating && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cinematic-900 text-amber-400 border border-cinematic-700">
+                    <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+                    <span>{movie.rating} Studio Rating</span>
+                  </span>
+                )}
                 {movie.year && (
                   <span className="text-xs text-slate-400 font-mono">
                     {movie.year}

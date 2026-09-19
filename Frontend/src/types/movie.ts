@@ -44,6 +44,7 @@ export interface BackendMovieDoc {
   processingError?: string;
   timings?: Record<string, number>;
   report?: any;
+  rating?: number;
   createdAt?: string;
   updatedAt?: string;
   __v?: number;

@@ -23,7 +23,12 @@ export function normalizeReport(raw: unknown): FinalFilmIntelligenceReport {
         "A compelling cinematic journey exploring the boundaries of human ambition and drama.",
       commercial_verdict:
         data.executive_summary?.commercial_verdict || "High Studio Viability / Breakout Potential",
-      overall_film_rating: data.executive_summary?.overall_film_rating || 8.5,
+      overall_film_rating:
+        typeof data.executive_summary?.overall_film_rating === "number"
+          ? data.executive_summary.overall_film_rating
+          : typeof (data.raw_ml_predictions as any)?.predicted_commercial_score === "number"
+          ? (data.raw_ml_predictions as any).predicted_commercial_score
+          : 0,
       commercial_tier: data.executive_summary?.commercial_tier || "Major Studio Tier",
       key_thesis:
         data.executive_summary?.key_thesis ||

@@ -41,12 +41,14 @@ export default function FilmReportPage() {
   } = useQuery({
     queryKey: ["movie-details", filmId],
     queryFn: () => movieApi.getMovieDetails(filmId),
+    enabled: Boolean(filmId),
   });
 
   useEffect(() => {
     let isMounted = true;
 
     async function loadReport() {
+      if (!filmId) return;
       setIsFetchingReport(true);
       setReportError(null);
 

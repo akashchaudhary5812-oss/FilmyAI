@@ -1,6 +1,33 @@
 import { BackendMovieDoc, Movie } from "@/types/movie";
 
 /**
+ * Extracts the real model-predicted rating from report or raw ML predictions.
+ * Returns undefined if no real model prediction is available yet.
+ */
+export function extractModelRating(doc: BackendMovieDoc): number | undefined {
+  if (doc.report) {
+    const rawRating =
+      doc.report.executive_summary?.overall_film_rating ??
+      doc.report.raw_ml_predictions?.predicted_commercial_score;
+
+    if (typeof rawRating === "number" && !isNaN(rawRating) && rawRating > 0) {
+      return Number(rawRating.toFixed(1));
+    }
+  }
+
+  // Fallback to top-level rating if present on doc in any form
+  if (
+    typeof doc.rating === "number" &&
+    !isNaN(doc.rating) &&
+    doc.rating > 0
+  ) {
+    return Number(doc.rating.toFixed(1));
+  }
+
+  return undefined;
+}
+
+/**
  * Transforms a raw Backend Movie Document from MongoDB into a clean frontend Movie model.
  */
 export function mapBackendMovieToMovie(doc: BackendMovieDoc): Movie {
@@ -36,7 +63,7 @@ export function mapBackendMovieToMovie(doc: BackendMovieDoc): Movie {
     timings: doc.timings,
     report: doc.report,
     year: doc.createdAt ? new Date(doc.createdAt).getFullYear() : 2025,
-    rating: 8.8, // Default baseline rating for studio catalog
+    rating: extractModelRating(doc),
   };
 }
 
