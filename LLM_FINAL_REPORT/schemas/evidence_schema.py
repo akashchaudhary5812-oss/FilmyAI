@@ -62,6 +62,10 @@ class VideoCinematographyEvidence(BaseModel):
         default_factory=dict,
         description="Detailed pacing metrics from ML_VIDEO"
     )
+    cast_performance: List[Dict[str, Any]] = Field(
+        default_factory=list,
+        description="Actor identification, screen time, and scene performance from ML_VIDEO"
+    )
     error_message: Optional[str] = None
 
 
@@ -80,6 +84,8 @@ class NormalizedEvidence(BaseModel):
     title: str
     director: str
     actors: List[str]
+    banner_image: Optional[str] = None
+    cast_members: List[Dict[str, Any]] = Field(default_factory=list)
     production_houses: List[str]
     budget: float
     genre: str
@@ -90,3 +96,4 @@ class NormalizedEvidence(BaseModel):
     video_evidence: VideoCinematographyEvidence
     story_evidence: StoryContextEvidence
     timestamp_utc: str
+

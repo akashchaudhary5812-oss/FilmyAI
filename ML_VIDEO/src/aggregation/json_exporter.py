@@ -16,6 +16,7 @@ def generate_film_intelligence_report(
     scene_segments: List[Dict[str, Any]],
     audio_summary: Dict[str, Any],
     pacing_metrics: Dict[str, Any],
+    cast_performance: Optional[List[Dict[str, Any]]] = None,
     output_path: Optional[str] = None
 ) -> Dict[str, Any]:
     """
@@ -68,7 +69,8 @@ def generate_film_intelligence_report(
         },
         "scene_breakdown": scene_segments,
         "detailed_shots": shots_analysis,
-        "audio_intelligence": audio_summary
+        "audio_intelligence": audio_summary,
+        "cast_performance": cast_performance or []
     }
 
     if output_path:
@@ -79,3 +81,4 @@ def generate_film_intelligence_report(
         print(f"[JSON Exporter] Film Intelligence Report saved: {out_file}")
 
     return report
+

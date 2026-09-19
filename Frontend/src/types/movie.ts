@@ -8,10 +8,28 @@ export type FilmGenre =
   | "Thriller"
   | "Other";
 
+export interface CastMember {
+  actorName: string;
+  characterName?: string | null;
+  imageUrl?: string | null;
+  imageId?: string | null;
+}
+
+export interface CastMemberUploadInput {
+  id: string;
+  actorName: string;
+  characterName?: string;
+  imageFile: File | null;
+  imagePreviewUrl?: string;
+}
+
 /** Raw document directly returned by Node.js MongoDB UploadFilm model */
 export interface BackendMovieDoc {
   _id: string;
   uploadFilm: string;
+  bannerImage?: string | null;
+  CastImage?: string | null;
+  castMembers?: CastMember[];
   FilmName: string;
   DirectorName: string;
   ProductionHouses: string[] | string;
@@ -37,10 +55,12 @@ export interface Movie {
   title: string;
   posterUrl: string;
   backdropUrl: string;
+  bannerUrl?: string;
   videoUrl?: string;
   director: string;
   productionHouses: string[];
   casting: string;
+  castMembers?: CastMember[];
   budget: string;
   genre: string;
   script?: string;
@@ -73,12 +93,21 @@ export type VideoInputType = "upload" | "url";
 export interface FilmUploadPayload {
   filmFile?: File | null;
   videoUrl?: string;
+  bannerFile?: File | null;
+  bannerUrl?: string;
   filmName: string;
   directorName: string;
   productionHouses: string;
   casting: string;
+  castMembers?: {
+    actorName: string;
+    characterName?: string;
+    imageFile?: File | null;
+    imageUrl?: string;
+  }[];
   budget: string;
   genre: FilmGenre;
   script?: string;
   summary?: string;
 }
+

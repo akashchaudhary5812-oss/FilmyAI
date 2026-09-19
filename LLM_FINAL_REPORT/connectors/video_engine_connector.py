@@ -46,11 +46,13 @@ class VideoEngineConnector:
         self,
         video_path: Optional[str] = None,
         video_url: Optional[str] = None,
+        cast_members: Optional[List[Dict[str, Any]]] = None,
         keyframe_dir: Optional[str] = None,
         max_duration_sec: Optional[float] = None
     ) -> VideoCinematographyEvidence:
         """
-        Resolves video input (local file or remote URL) and executes ML_VIDEO analysis.
+        Resolves video input (local file or remote URL) and executes ML_VIDEO analysis
+        with single-pass actor identification.
         Automatically cleans up temporary cached files after analysis completes.
         """
         target = video_path or video_url
@@ -95,9 +97,10 @@ class VideoEngineConnector:
                     error_message=f"ML_VIDEO Engine initialization error: {self._init_error}"
                 )
 
-            # 3. Execute ML_VIDEO Multimodal Analysis
+            # 3. Execute ML_VIDEO Multimodal Analysis with Cast Members
             report = engine.analyze_video(
                 video_path=str(resolved_video.path),
+                cast_members=cast_members,
                 keyframe_dir=keyframe_dir,
                 max_duration_sec=max_duration_sec
             )
@@ -106,6 +109,7 @@ class VideoEngineConnector:
             exec_sum = report.get("executive_summary", {})
             cin_prof = report.get("cinematography_profile", {})
             detailed_shots = report.get("detailed_shots", [])
+            cast_perf = report.get("cast_performance", [])
 
             # Extract keyframe paths
             keyframes = []
@@ -150,7 +154,8 @@ class VideoEngineConnector:
                 # v3.0: Full shot detail list for deep scene scoring
                 all_shots_detail=detailed_shots,
                 audio_summary=report.get("audio_analysis", {}),
-                pacing_metrics=report.get("pacing_metrics", {})
+                pacing_metrics=report.get("pacing_metrics", {}),
+                cast_performance=cast_perf
             )
         except Exception as e:
             return VideoCinematographyEvidence(
@@ -161,3 +166,4 @@ class VideoEngineConnector:
             # Deterministic cleanup of temporary downloaded videos
             if resolved_video:
                 resolved_video.cleanup()
+

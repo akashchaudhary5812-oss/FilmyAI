@@ -81,6 +81,10 @@ export interface CastPerformanceItem {
   actor_name: string;
   character_name: string;
   role_category?: string;
+  image_url?: string | null;
+  identity_confidence?: number | null;
+  screen_time_seconds?: number | null;
+  scene_count?: number | null;
   screen_presence?: string | null;
   scores: CastPerformanceDimensions;
   overall_performance_score?: number | null;

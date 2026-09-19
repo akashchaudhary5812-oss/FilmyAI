@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const uploadFilmSchema = new mongoose.Schema({
+
+    bannerImage: {
+        type: String,
+        default: null
+    },
+
     uploadFilm: {
         type: String,
         required: true
@@ -25,6 +31,36 @@ const uploadFilmSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+
+    CastImage: {
+        type: String,
+        default: null
+    },
+
+    castMembers: [
+        {
+            actorName: {
+                type: String,
+                required: true
+            },
+            characterName: {
+                type: String,
+                default: null
+            },
+            imageUrl: {
+                type: String,
+                required: true
+            },
+            imageId: {
+                type: String,
+                default: null
+            },
+            storageKey: {
+                type: String,
+                default: null
+            }
+        }
+    ],
 
     Budget: {
         type: String,

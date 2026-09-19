@@ -84,18 +84,31 @@ export function CastPerformanceSection({ report }: CastPerformanceSectionProps) 
               className="p-5 rounded-xl bg-cinematic-950/80 border border-white/10 hover:border-white/20 transition-all flex flex-col justify-between space-y-4"
             >
               <div className="space-y-3">
-                {/* Card Header: Actor, Role, Score */}
+                {/* Card Header: Actor Image, Name, Role, Score */}
                 <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-white text-base">{item.actor_name}</span>
-                      <span className="text-xs px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">
-                        {item.role_category?.replace("_", " ") || "ROLE"}
-                      </span>
+                  <div className="flex items-center gap-3">
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url}
+                        alt={item.actor_name}
+                        className="w-12 h-12 rounded-xl object-cover border border-gold-500/30 shadow-md shrink-0 bg-cinematic-900"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-xl bg-cinematic-900 border border-white/10 flex items-center justify-center text-slate-400 shrink-0">
+                        <Users className="w-5 h-5 text-gold-400/70" />
+                      </div>
+                    )}
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-bold text-white text-base">{item.actor_name}</span>
+                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-300 font-mono">
+                          {item.role_category?.replace("_", " ") || "ROLE"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-400 font-mono mt-0.5">
+                        as <span className="text-gold-300 font-semibold">{item.character_name}</span>
+                      </p>
                     </div>
-                    <p className="text-xs text-slate-400 font-mono mt-0.5">
-                      as <span className="text-gold-300 font-semibold">{item.character_name}</span>
-                    </p>
                   </div>
                   {item.overall_performance_score != null && (
                     <div
@@ -108,6 +121,25 @@ export function CastPerformanceSection({ report }: CastPerformanceSectionProps) 
                       </span>
                       <span className="text-[9px] uppercase tracking-wider opacity-70">/10</span>
                     </div>
+                  )}
+                </div>
+
+                {/* Computer Vision Evidence Badges (Screen Time & Confidence) */}
+                <div className="flex items-center gap-2 flex-wrap pt-1">
+                  {item.screen_time_seconds != null && (
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cinematic-900 border border-white/10 text-slate-300">
+                      ⏱️ Screen Time: <strong className="text-white">{Math.floor(item.screen_time_seconds / 60)}m {Math.round(item.screen_time_seconds % 60)}s</strong>
+                    </span>
+                  )}
+                  {item.scene_count != null && (
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cinematic-900 border border-white/10 text-slate-300">
+                      🎬 {item.scene_count} Identified Scenes
+                    </span>
+                  )}
+                  {item.identity_confidence != null && (
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-neural-500/10 border border-neural-500/30 text-neural-300">
+                      CV Match: {(item.identity_confidence * 100).toFixed(0)}%
+                    </span>
                   )}
                 </div>
 

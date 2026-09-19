@@ -337,31 +337,62 @@ class ReportChunker:
         if cast_items:
             for ci in cast_items:
                 actor = ci.get("actor_name", "Unknown Actor")
+                char = ci.get("character_name", "Unresolved")
                 role = ci.get("role_category", "OTHER")
                 overall = ci.get("overall_performance_score")
                 scores = ci.get("scores", {}) or {}
                 dims = scores.get("dimensions_available", [])
                 ev = ci.get("evidence", [])
+                screen_time = ci.get("screen_time_seconds")
+                scene_cnt = ci.get("scene_count")
+                strong_moments = ci.get("strong_moments", [])
+                weak_moments = ci.get("weak_moments", [])
+
                 lines = [
-                    f"Cast Performance: {actor} ({role})",
-                    f"Overall Score: {overall if overall is not None else 'null (insufficient evidence)'}",
-                    f"Character: {ci.get('character_name', 'Unresolved')}",
+                    f"Cast Performance: {actor} ({role}) as {char}",
+                    f"Overall Score: {overall if overall is not None else 'null (insufficient evidence)'}/10.0",
                     f"Confidence: {ci.get('confidence', 'LOW')}",
                     f"Acting Score: {scores.get('acting_score', 'null')}",
-                    f"Emotional Connect: {scores.get('emotional_connect_score', 'null')}",
-                    f"Dialogue Delivery: {scores.get('dialogue_delivery_score', 'null')}",
-                    f"Character Arc: {scores.get('character_arc_score', 'null')}",
-                    f"Dimensions with Evidence: {', '.join(dims) if dims else 'none'}",
+                    f"Emotional Connect Score: {scores.get('emotional_connect_score', 'null')}",
+                    f"Dialogue Delivery Score: {scores.get('dialogue_delivery_score', 'null')}",
+                    f"Scene Impact Score: {scores.get('scene_impact_score', 'null')}",
+                    f"Character Consistency Score: {scores.get('character_consistency_score', 'null')}",
+                    f"Character Arc Score: {scores.get('character_arc_score', 'null')}",
                 ]
+
+                if screen_time is not None:
+                    lines.append(f"Estimated Screen Time: {screen_time:.1f} seconds ({scene_cnt or 0} identified scenes)")
+
+                if strong_moments:
+                    sm_strs = [f"{sm.get('timestamp_start')}-{sm.get('timestamp_end')}: {sm.get('reason')}" for sm in strong_moments]
+                    lines.append(f"Standout / Strong Moments: {'; '.join(sm_strs)}")
+
+                if weak_moments:
+                    wm_strs = [f"{wm.get('timestamp_start')}-{wm.get('timestamp_end')}: {wm.get('reason')}" for wm in weak_moments]
+                    lines.append(f"Growth / Vulnerable Beats: {'; '.join(wm_strs)}")
+
                 if ev:
-                    lines.append(f"Evidence: {'; '.join(ev[:3])}")
+                    lines.append(f"Supporting Evidence: {'; '.join(ev[:4])}")
+
                 if ci.get("improvement_notes"):
                     lines.append(f"Improvement Notes: {ci['improvement_notes']}")
+
+                actor_timestamps = []
+                for m in (strong_moments + weak_moments):
+                    if m.get("timestamp_start"):
+                        actor_timestamps.append(f"{m.get('timestamp_start')}-{m.get('timestamp_end')}")
+
                 chunks.append(make_chunk(
                     section="Cast Performance",
                     subsection=f"Actor: {actor}",
                     content="\n".join(lines),
-                    metrics={"overall_performance_score": overall, "role_category": role},
+                    timestamps=actor_timestamps,
+                    metrics={
+                        "overall_performance_score": overall,
+                        "role_category": role,
+                        "screen_time_seconds": screen_time,
+                        "scene_count": scene_cnt
+                    },
                     confidence=ci.get("overall_performance_score"),
                 ))
 

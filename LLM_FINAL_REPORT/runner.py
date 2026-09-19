@@ -49,6 +49,7 @@ def run_pipeline_with_stages(payload: dict) -> dict:
     video_evidence = pipeline.video_connector.analyze(
         video_path=request.video_path,
         video_url=request.video_url,
+        cast_members=request.cast_members,
         keyframe_dir=str(keyframe_out_dir),
         max_duration_sec=request.max_video_duration_sec
     )

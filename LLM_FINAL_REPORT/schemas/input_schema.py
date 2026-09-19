@@ -27,6 +27,10 @@ class FilmInputRequest(BaseModel):
     is_sequel: bool = Field(False, description="Whether the film is a sequel/franchise entry")
     writers: List[str] = Field(default_factory=list, description="List of screenwriters/story writers")
     
+    # Media Assets & Cast Reference Photos
+    banner_image: Optional[str] = Field(None, alias="bannerImage", description="Film banner image URL or local path")
+    cast_members: List[Dict[str, Any]] = Field(default_factory=list, alias="castMembers", description="Structured cast members with names, roles, and reference image paths")
+
     # Optional Story Context (Strict Priority Handling)
     script: Optional[str] = Field(None, alias="Script", description="User-provided screenplay/script text or excerpt")
     summary: Optional[str] = Field(None, alias="Summary", description="User-provided film synopsis/logline")

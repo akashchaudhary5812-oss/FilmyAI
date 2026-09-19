@@ -28,6 +28,7 @@ from ML_VIDEO.src.segmentation.scene_detector import FilmSceneDetector
 from ML_VIDEO.src.segmentation.keyframe_extractor import FilmKeyframeExtractor
 from ML_VIDEO.src.vfx.lighting_composition import FilmAestheticsAnalyzer
 from ML_VIDEO.src.audio_video.speech_classifier import FilmSpeechClassifier, AudioFeatureExtractor
+from ML_VIDEO.src.semantic.actor_identifier import SinglePassActorIdentifier
 from ML_VIDEO.src.aggregation.json_exporter import generate_film_intelligence_report
 
 
@@ -102,16 +103,18 @@ class FilmyAIVideoEngine:
         self.keyframe_extractor = FilmKeyframeExtractor()
         self.aesthetics_analyzer = FilmAestheticsAnalyzer()
         self.audio_extractor = AudioFeatureExtractor()
+        self.actor_identifier = SinglePassActorIdentifier(device=self.device)
 
     def analyze_video(
         self,
         video_path: str,
+        cast_members: Optional[List[Dict[str, Any]]] = None,
         output_json_path: Optional[str] = None,
         keyframe_dir: Optional[str] = None,
         max_duration_sec: Optional[float] = None
     ) -> Dict[str, Any]:
         """
-        Executes complete multimodal analysis of a video file.
+        Executes complete multimodal analysis of a video file with single-pass actor identification.
         """
         vpath = Path(video_path)
         if not vpath.exists():
@@ -119,6 +122,10 @@ class FilmyAIVideoEngine:
 
         start_time = time.time()
         print(f"\n[FilmyAIVideoEngine] Analyzing video: {vpath.name}")
+
+        # Step 0: Register Cast Members & Compute Reference Face Embeddings
+        if cast_members:
+            self.actor_identifier.register_cast_members(cast_members)
 
         # Step 1: Video Metadata Probe
         cap = cv2.VideoCapture(str(vpath))
@@ -152,8 +159,8 @@ class FilmyAIVideoEngine:
             str(vpath), shots, output_dir=keyframe_dir
         )
 
-        # Step 4: Visual & Cinematography Inference per Shot
-        print("[FilmyAIVideoEngine] Running deep vision classifiers...")
+        # Step 4: Visual & Cinematography Inference + Single-Pass Actor Identification per Shot
+        print("[FilmyAIVideoEngine] Running deep vision classifiers & actor identification...")
         analyzed_shots = []
         for shot in enriched_shots:
             kinfo = shot.get("keyframe")
@@ -184,6 +191,18 @@ class FilmyAIVideoEngine:
             # 4c. Lighting & Composition Aesthetics
             aesthetics = self.aesthetics_analyzer.analyze_frame(img_pil)
 
+            # 4d. Single-Pass Actor Matching for this Shot
+            detected_actors = self.actor_identifier.process_shot_keyframe(
+                shot_id=shot["shot_id"],
+                start_time_sec=shot["start_time_sec"],
+                end_time_sec=shot["end_time_sec"],
+                duration_sec=shot["duration_sec"],
+                keyframe_image=img_pil,
+                shot_scale=pred_class,
+                lighting=aesthetics.get("lighting", {}).get("style", "unknown"),
+                composition=aesthetics.get("composition", {}).get("detected_rule", "unknown")
+            )
+
             # Assemble shot record (omit raw PIL image from JSON)
             shot_record = {
                 "shot_id": shot["shot_id"],
@@ -197,7 +216,8 @@ class FilmyAIVideoEngine:
                     "probabilities": {cls_name: round(float(shot_probs[i]), 4) for i, cls_name in enumerate(self.shot_classes)}
                 },
                 "cinematography": aesthetics,
-                "multi_task_predictions": cinematography_preds
+                "multi_task_predictions": cinematography_preds,
+                "detected_actors": detected_actors
             }
             analyzed_shots.append(shot_record)
 
@@ -254,7 +274,14 @@ class FilmyAIVideoEngine:
             "pacing": rhythm
         }]
 
-        # Step 8: Build Production Report
+        # Step 8: Aggregate Cast Intelligence from Video Evidence
+        cast_performance = self.actor_identifier.aggregate_cast_intelligence(
+            total_film_duration=duration,
+            total_shots=len(analyzed_shots),
+            audio_speech_mode=audio_summary.get("dominant_acoustic_mode", "Speech")
+        )
+
+        # Step 9: Build Production Report
         report = generate_film_intelligence_report(
             video_path=str(vpath),
             metadata=metadata,
@@ -262,9 +289,11 @@ class FilmyAIVideoEngine:
             scene_segments=scenes,
             audio_summary=audio_summary,
             pacing_metrics=pacing_metrics,
+            cast_performance=cast_performance,
             output_path=output_json_path
         )
 
         elapsed = round(time.time() - start_time, 2)
         print(f"[FilmyAIVideoEngine] Complete analysis finished in {elapsed}s!")
         return report
+

@@ -35,6 +35,8 @@ class EvidenceNormalizer:
             title=request.title,
             director=request.director,
             actors=request.actors,
+            banner_image=request.banner_image,
+            cast_members=request.cast_members,
             production_houses=request.production_houses,
             budget=request.budget,
             genre=request.genre,

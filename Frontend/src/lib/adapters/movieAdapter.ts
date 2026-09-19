@@ -10,18 +10,21 @@ export function mapBackendMovieToMovie(doc: BackendMovieDoc): Movie {
     ? doc.ProductionHouses.split(",").map((s) => s.trim())
     : [];
 
-  // Use the uploaded ImageKit image URL as the poster and backdrop
+  // Use the uploaded banner image URL as the poster/backdrop if available, else mediaUrl
   const mediaUrl = doc.uploadFilm || "";
+  const bannerUrl = doc.bannerImage || mediaUrl;
 
   return {
     id: doc._id,
     title: doc.FilmName || "Untitled Film",
-    posterUrl: mediaUrl,
-    backdropUrl: mediaUrl,
+    posterUrl: bannerUrl,
+    backdropUrl: bannerUrl,
+    bannerUrl: bannerUrl,
     videoUrl: mediaUrl,
     director: doc.DirectorName || "Unknown Director",
     productionHouses: prodHouses,
     casting: doc.Casting || "Not listed",
+    castMembers: doc.castMembers || [],
     budget: doc.Budget || "Undisclosed",
     genre: doc.Genre || "Drama",
     script: doc.Script || "",

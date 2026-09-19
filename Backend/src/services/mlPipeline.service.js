@@ -32,12 +32,24 @@ class MLPipelineService {
                 processingError: null
             });
 
+            const castMembersPayload = (options.castMembers || filmDoc.castMembers || []).map(c => ({
+                actor_name: c.actorName,
+                character_name: c.characterName || null,
+                image_url: c.imageUrl || null,
+                image_path: c.localImagePath || (c.imageUrl && fs.existsSync(c.imageUrl) ? c.imageUrl : null)
+            }));
+
             // Prepare payload
             const payload = {
                 film_id: filmId,
                 FilmName: filmDoc.FilmName,
                 DirectorName: filmDoc.DirectorName,
                 Casting: filmDoc.Casting,
+                CastImage: filmDoc.CastImage || null,
+                banner_image: filmDoc.bannerImage || options.bannerImageUrl || null,
+                bannerImage: filmDoc.bannerImage || options.bannerImageUrl || null,
+                cast_members: castMembersPayload,
+                castMembers: castMembersPayload,
                 ProductionHouses: Array.isArray(filmDoc.ProductionHouses) 
                     ? filmDoc.ProductionHouses.join(', ') 
                     : filmDoc.ProductionHouses,
