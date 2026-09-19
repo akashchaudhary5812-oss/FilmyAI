@@ -45,6 +45,43 @@ const uploadFilmSchema = new mongoose.Schema({
         type: String,
     },
 
+    // ── Storage Provider & S3 Metadata ───────────────────────────────────
+    storageProvider: {
+        type: String,
+        enum: ['AWS_S3', 'LOCAL_STORAGE', 'IMAGEKIT', 'EXTERNAL_URL'],
+        default: 'LOCAL_STORAGE'
+    },
+
+    s3Bucket: {
+        type: String,
+        default: null
+    },
+
+    s3Key: {
+        type: String,
+        default: null
+    },
+
+    s3ObjectUrl: {
+        type: String,
+        default: null
+    },
+
+    originalFileName: {
+        type: String,
+        default: null
+    },
+
+    fileSize: {
+        type: Number,
+        default: 0
+    },
+
+    mimeType: {
+        type: String,
+        default: null
+    },
+
     // ── Pipeline & Report State Tracking ─────────────────────────────────
     processingStatus: {
         type: String,

@@ -24,6 +24,8 @@ import { reportApi, FilmPipelineStatusResponse } from "@/lib/api/reports";
 
 interface ProcessingVisualizerProps {
   movie: Movie;
+  onComplete?: (report: any) => void;
+  autoRedirect?: boolean;
 }
 
 export type ProcessingStateCode =
@@ -44,14 +46,20 @@ interface PipelineStep {
   icon: React.ReactNode;
 }
 
-export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
+export function ProcessingVisualizer({
+  movie,
+  onComplete,
+  autoRedirect = true,
+}: ProcessingVisualizerProps) {
   const router = useRouter();
   const [activeStateCode, setActiveStateCode] = useState<ProcessingStateCode>("PENDING");
   const [currentProgress, setCurrentProgress] = useState(10);
   const [isCompleted, setIsCompleted] = useState(false);
   const [pipelineError, setPipelineError] = useState<string | null>(null);
   const [timings, setTimings] = useState<Record<string, number>>({});
+  const [redirectSeconds, setRedirectSeconds] = useState<number | null>(null);
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
+  const redirectTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const isUrlSource =
     typeof movie.posterUrl === "string" &&
@@ -110,6 +118,7 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
 
     const currentIdx = stateOrder.indexOf(activeStateCode);
     if (currentIdx === -1) {
+      // PENDING or starting
       return stepIndex === 0 ? "active" : "queued";
     }
     if (currentIdx > stepIndex) return "completed";
@@ -129,14 +138,26 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
         if (statusRes.status) {
           const state = statusRes.processingStatus;
           setActiveStateCode(state);
-          setCurrentProgress(statusRes.analysisProgress || 10);
+          
+          // Smooth progressive minimums based on state
+          let calculatedProg = statusRes.analysisProgress || 10;
+          if (state === "PENDING") calculatedProg = Math.max(calculatedProg, 10);
+          else if (state === "VALIDATING_MEDIA") calculatedProg = Math.max(calculatedProg, 15);
+          else if (state === "ANALYZING_VIDEO") calculatedProg = Math.max(calculatedProg, 35);
+          else if (state === "ANALYZING_COMMERCIAL") calculatedProg = Math.max(calculatedProg, 60);
+          else if (state === "GENERATING_REPORT") calculatedProg = Math.max(calculatedProg, 80);
+          else if (state === "INDEXING_RAG") calculatedProg = Math.max(calculatedProg, 92);
+          else if (state === "COMPLETED") calculatedProg = 100;
+
+          setCurrentProgress(calculatedProg);
           if (statusRes.timings) setTimings(statusRes.timings);
 
           if (state === "COMPLETED") {
             // Pipeline finished on backend: fetch the real generated report
+            let fullReport = null;
             try {
-              const fullReport = await reportApi.getFilmReport(movie.id);
-              if (typeof window !== "undefined") {
+              fullReport = await reportApi.getFilmReport(movie.id);
+              if (typeof window !== "undefined" && fullReport) {
                 sessionStorage.setItem(`filmy_report_${movie.id}`, JSON.stringify(fullReport));
               }
             } catch (repErr) {
@@ -145,6 +166,15 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
 
             setIsCompleted(true);
             if (pollingRef.current) clearInterval(pollingRef.current);
+
+            if (onComplete && fullReport) {
+              onComplete(fullReport);
+            } else if (autoRedirect) {
+              setRedirectSeconds(2);
+              redirectTimerRef.current = setTimeout(() => {
+                router.push(`/film-report/${movie.id}`);
+              }, 2000);
+            }
             return;
           }
 
@@ -162,14 +192,15 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
     // Initial check immediately
     pollStatus();
 
-    // Poll every 1.8 seconds
-    pollingRef.current = setInterval(pollStatus, 1800);
+    // Poll every 1.5 seconds
+    pollingRef.current = setInterval(pollStatus, 1500);
 
     return () => {
       isSubscribed = false;
       if (pollingRef.current) clearInterval(pollingRef.current);
+      if (redirectTimerRef.current) clearTimeout(redirectTimerRef.current);
     };
-  }, [movie.id]);
+  }, [movie.id, onComplete, autoRedirect, router]);
 
   return (
     <div className="max-w-2xl mx-auto p-6 sm:p-8 rounded-3xl glass-panel border border-white/10 shadow-2xl space-y-8 my-8 animate-in fade-in duration-300">
@@ -360,14 +391,19 @@ export function ProcessingVisualizer({ movie }: ProcessingVisualizerProps) {
 
       {/* Completion CTA */}
       {isCompleted && (
-        <div className="pt-4 border-t border-white/10 text-center animate-in fade-in duration-300">
+        <div className="pt-4 border-t border-white/10 space-y-3 text-center animate-in fade-in duration-300">
+          {redirectSeconds !== null && (
+            <p className="text-xs font-mono text-emerald-400 animate-pulse">
+              Analysis complete! Transitioning to intelligence dossier...
+            </p>
+          )}
           <Button
             variant="primary"
             size="lg"
             onClick={() => router.push(`/film-report/${movie.id}`)}
             className="w-full py-4 text-base font-semibold shadow-xl shadow-gold-500/25"
           >
-            <span>Open Studio Intelligence Report & RAG Q&A</span>
+            <span>Open Studio Intelligence Report &amp; RAG Q&amp;A</span>
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </div>

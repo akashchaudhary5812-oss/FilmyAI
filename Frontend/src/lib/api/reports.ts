@@ -66,7 +66,13 @@ export const reportApi = {
       `/api/film/${filmId}/report`
     );
     if (!response.data.report) {
-      throw new Error(response.data.message || "Film report is still generating or unavailable.");
+      const err = new Error(response.data.message || "Film report is still generating or unavailable.") as Error & {
+        isProcessing?: boolean;
+        processingStatus?: string;
+      };
+      err.isProcessing = Boolean(response.data.isProcessing);
+      err.processingStatus = response.data.processingStatus;
+      throw err;
     }
     return normalizeReport(response.data.report);
   },

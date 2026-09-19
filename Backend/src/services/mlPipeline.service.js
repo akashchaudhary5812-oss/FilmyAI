@@ -12,12 +12,17 @@ class MLPipelineService {
      * Updates MongoDB with real stage progression, timings, and saves the final validated report.
      * 
      * @param {Object} filmDoc - UploadFilm Mongoose document
+     * @param {Object} [options] - Execution options
+     * @param {string} [options.localFilePath] - Optional local file path for direct filesystem ML_VIDEO analysis
      */
-    async triggerPipeline(filmDoc) {
+    async triggerPipeline(filmDoc, options = {}) {
         if (!filmDoc || !filmDoc._id) return;
 
         const filmId = filmDoc._id.toString();
         console.log(`[MLPipelineService] Starting asynchronous analysis pipeline for Film ID: ${filmId} ('${filmDoc.FilmName}')`);
+
+        const localFilePath = options.localFilePath;
+        const videoTarget = localFilePath && fs.existsSync(localFilePath) ? localFilePath : filmDoc.uploadFilm;
 
         try {
             // Update status to starting
@@ -39,7 +44,7 @@ class MLPipelineService {
                 Budget: filmDoc.Budget,
                 Genre: filmDoc.Genre,
                 uploadFilm: filmDoc.uploadFilm,
-                video_path: filmDoc.uploadFilm,
+                video_path: videoTarget,
                 Script: filmDoc.Script || '',
                 Summary: filmDoc.Summary || '',
                 generate_pdf: true
@@ -53,18 +58,19 @@ class MLPipelineService {
             const payloadFile = path.join(tempDir, `payload_${filmId}.json`);
             fs.writeFileSync(payloadFile, JSON.stringify(payload, null, 2), 'utf-8');
 
-            // Launch Python pipeline runner
+            // Launch Python pipeline runner in unbuffered mode for real-time progress streaming
             const pythonExecutable = process.env.PYTHON_PATH || 'python';
             const child = spawn(
                 pythonExecutable,
-                ['-m', 'LLM_FINAL_REPORT.runner', '--json-input', payloadFile],
+                ['-u', '-m', 'LLM_FINAL_REPORT.runner', '--json-input', payloadFile],
                 {
                     cwd: WORKSPACE_ROOT,
                     env: {
                         ...process.env,
-                        PYTHONPATH: WORKSPACE_ROOT
+                        PYTHONPATH: WORKSPACE_ROOT,
+                        PYTHONUNBUFFERED: '1'
                     },
-                    shell: true
+                    shell: false
                 }
             );
 

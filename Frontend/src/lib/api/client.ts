@@ -1,10 +1,11 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
 
 /**
- * Base API URL configured strictly via NEXT_PUBLIC_API_BASE_URL
- * Never hardcoded to localhost.
+ * Base API URL configured via NEXT_PUBLIC_API_BASE_URL with safe fallback to http://localhost:3000
  */
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_BASE_URL || "").trim();
+const API_BASE_URL = (
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000"
+).trim();
 
 export const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -12,7 +13,7 @@ export const apiClient: AxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 30000,
+  timeout: 60000,
 });
 
 // Request interceptor to attach JWT Authorization Bearer header if stored

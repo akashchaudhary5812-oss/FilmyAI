@@ -20,6 +20,12 @@ export interface BackendMovieDoc {
   Genre: FilmGenre | string;
   Script?: string;
   Summary?: string;
+  processingStatus?: string;
+  analysisProgress?: number;
+  ragReady?: boolean;
+  processingError?: string;
+  timings?: Record<string, number>;
+  report?: any;
   createdAt?: string;
   updatedAt?: string;
   __v?: number;
@@ -39,6 +45,12 @@ export interface Movie {
   genre: string;
   script?: string;
   summary?: string;
+  processingStatus?: string;
+  analysisProgress?: number;
+  ragReady?: boolean;
+  processingError?: string;
+  timings?: Record<string, number>;
+  report?: any;
   rating?: number;
   year?: number;
 }

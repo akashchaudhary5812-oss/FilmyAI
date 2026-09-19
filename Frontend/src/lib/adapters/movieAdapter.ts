@@ -26,6 +26,12 @@ export function mapBackendMovieToMovie(doc: BackendMovieDoc): Movie {
     genre: doc.Genre || "Drama",
     script: doc.Script || "",
     summary: doc.Summary || "",
+    processingStatus: doc.processingStatus || "PENDING",
+    analysisProgress: doc.analysisProgress !== undefined ? doc.analysisProgress : 0,
+    ragReady: Boolean(doc.ragReady),
+    processingError: doc.processingError,
+    timings: doc.timings,
+    report: doc.report,
     year: doc.createdAt ? new Date(doc.createdAt).getFullYear() : 2025,
     rating: 8.8, // Default baseline rating for studio catalog
   };

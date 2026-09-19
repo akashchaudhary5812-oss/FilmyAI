@@ -7,20 +7,22 @@ const UploadFilmRoutes = require('./routes/UploadFilm.route');
 const movieRoutes = require('./routes/movie.route');
 
 // ── CORS ─────────────────────────────────────────────────────────────
-// Allow the Next.js frontend origin (configured via FRONTEND_URL env var)
-// Falls back to permissive dev mode when not set.
+// Allow frontend origin dynamically (Next.js on port 4000/3000/3001 or FRONTEND_URL)
 const FRONTEND_URL = process.env.FRONTEND_URL || '';
 
 app.use((req, res, next) => {
     const origin = req.headers.origin;
-    if (!FRONTEND_URL || (origin && origin === FRONTEND_URL)) {
-        res.setHeader('Access-Control-Allow-Origin', origin || '*');
-    } else if (!FRONTEND_URL) {
-        res.setHeader('Access-Control-Allow-Origin', '*');
+    if (origin) {
+        // Echo back the request origin for credentials support in dev/prod
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    } else {
+        res.setHeader('Access-Control-Allow-Origin', FRONTEND_URL || '*');
     }
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Cookie');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Cookie,X-Requested-With,Accept,Origin,Range');
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Range,Content-Length,Accept-Ranges,ETag');
+    
     if (req.method === 'OPTIONS') {
         return res.sendStatus(204);
     }

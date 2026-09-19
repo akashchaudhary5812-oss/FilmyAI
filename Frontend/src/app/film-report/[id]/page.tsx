@@ -17,6 +17,7 @@ import { CommercialMetrics } from "@/components/report/CommercialMetrics";
 import { CreativeAssessment } from "@/components/report/CreativeAssessment";
 import { StrategicRoadmap } from "@/components/report/StrategicRoadmap";
 import { RagChatbot } from "@/components/chatbot/RagChatbot";
+import { ProcessingVisualizer } from "@/components/analysis/ProcessingVisualizer";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { ErrorState } from "@/components/ui/EmptyState";
 import { normalizeReport } from "@/lib/adapters/reportAdapter";
@@ -27,6 +28,7 @@ export default function FilmReportPage() {
 
   const [report, setReport] = useState<FinalFilmIntelligenceReport | null>(null);
   const [isFetchingReport, setIsFetchingReport] = useState(true);
+  const [isStillProcessing, setIsStillProcessing] = useState(false);
   const [reportError, setReportError] = useState<string | null>(null);
 
   // Fetch movie details from backend
@@ -51,16 +53,27 @@ export default function FilmReportPage() {
       // 1. Try to fetch genuine report from backend DB
       try {
         const dbReport = await reportApi.getFilmReport(filmId);
-        if (isMounted) {
+        if (isMounted && dbReport) {
           setReport(dbReport);
+          setIsStillProcessing(false);
           if (typeof window !== "undefined") {
             sessionStorage.setItem(`filmy_report_${filmId}`, JSON.stringify(dbReport));
           }
           setIsFetchingReport(false);
           return;
         }
-      } catch (err: unknown) {
-        console.log("[FilmReport] Backend DB report not yet ready or fetch failed:", err);
+      } catch (err: any) {
+        if (
+          err?.isProcessing ||
+          err?.message?.includes("still in progress") ||
+          err?.message?.includes("still generating")
+        ) {
+          if (isMounted) {
+            setIsStillProcessing(true);
+            setIsFetchingReport(false);
+            return;
+          }
+        }
       }
 
       // 2. Check session storage as fast cache
@@ -69,8 +82,9 @@ export default function FilmReportPage() {
         if (cached) {
           try {
             const parsed = JSON.parse(cached);
-            if (isMounted) {
+            if (isMounted && parsed) {
               setReport(normalizeReport(parsed));
+              setIsStillProcessing(false);
               setIsFetchingReport(false);
               return;
             }
@@ -78,8 +92,27 @@ export default function FilmReportPage() {
         }
       }
 
-      // 3. Fallback: If movie is loaded, trigger direct generation
-      if (movie) {
+      // 3. If movie has embedded report
+      if (movie?.report) {
+        if (isMounted) {
+          setReport(normalizeReport(movie.report));
+          setIsStillProcessing(false);
+          setIsFetchingReport(false);
+          return;
+        }
+      }
+
+      // 4. If movie status indicates still processing
+      if (movie && movie.processingStatus && movie.processingStatus !== "COMPLETED") {
+        if (isMounted) {
+          setIsStillProcessing(true);
+          setIsFetchingReport(false);
+          return;
+        }
+      }
+
+      // 5. Fallback: If movie is loaded and definitely COMPLETED or legacy, attempt generation
+      if (movie && movie.processingStatus === "COMPLETED") {
         try {
           const generated = await reportApi.generateReport({
             film_id: filmId,
@@ -95,8 +128,9 @@ export default function FilmReportPage() {
             generate_pdf: true,
           });
 
-          if (isMounted) {
+          if (isMounted && generated) {
             setReport(generated);
+            setIsStillProcessing(false);
             if (typeof window !== "undefined") {
               sessionStorage.setItem(`filmy_report_${filmId}`, JSON.stringify(generated));
             }
@@ -117,14 +151,16 @@ export default function FilmReportPage() {
       }
     }
 
-    loadReport();
+    if (filmId) {
+      loadReport();
+    }
 
     return () => {
       isMounted = false;
     };
   }, [filmId, movie]);
 
-  if (isMovieLoading || (isFetchingReport && !report)) {
+  if (isMovieLoading || (isFetchingReport && !report && !isStillProcessing)) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
         <Skeleton className="w-full h-48 rounded-3xl" />
@@ -152,6 +188,26 @@ export default function FilmReportPage() {
         />
       </div>
     );
+  }
+
+  // If movie is still actively processing in backend pipeline, display the real-time visualizer
+  if (movie && (!report || isStillProcessing)) {
+    if (movie.processingStatus !== "COMPLETED" || isStillProcessing) {
+      return (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <ProcessingVisualizer
+            movie={movie}
+            autoRedirect={false}
+            onComplete={(loadedReport) => {
+              if (loadedReport) {
+                setReport(loadedReport);
+                setIsStillProcessing(false);
+              }
+            }}
+          />
+        </div>
+      );
+    }
   }
 
   if (!report) {
