@@ -56,7 +56,7 @@ export function MovieHero({ movie }: MovieHeroProps) {
       movie.backdropUrl.includes("/uploads/videos/"));
 
   return (
-    <div className="relative w-full h-[70vh] min-h-[520px] max-h-[720px] overflow-hidden select-none bg-cinematic-950">
+    <div className="relative w-full h-[88vh] min-h-[620px] max-h-[900px] overflow-hidden select-none bg-cinematic-950">
       {/* Background Media Backdrop */}
       {movie.backdropUrl && !isVideo && !imageError ? (
         <div className="absolute inset-0">
@@ -65,7 +65,7 @@ export function MovieHero({ movie }: MovieHeroProps) {
             alt={movie.title}
             fill
             priority
-            className="object-cover object-center opacity-40 filter brightness-90 contrast-110"
+            className="object-cover object-top opacity-70 filter brightness-110 contrast-105"
             onError={() => setImageError(true)}
           />
         </div>
@@ -74,8 +74,8 @@ export function MovieHero({ movie }: MovieHeroProps) {
       )}
 
       {/* Cinematic Multi-Layer Gradient Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-cinematic-950 via-cinematic-950/60 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-r from-cinematic-950 via-cinematic-950/80 to-transparent w-full md:w-3/4" />
+      <div className="absolute inset-0 bg-gradient-to-t from-cinematic-950 via-cinematic-950/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-cinematic-950 via-cinematic-950/60 to-transparent w-full md:w-3/4" />
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-12 sm:pb-16">

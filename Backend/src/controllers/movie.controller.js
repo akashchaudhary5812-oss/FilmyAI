@@ -13,6 +13,19 @@ async function watchMovie(req, res) {
     try {
         const movie = await uploadFilm.findById(id);
         if (!movie) return res.status(404).json({ message: 'Movie not found' });
+
+        // Auto-backfill rating for films completed before the rating field was added
+        if (movie.report && (movie.rating === null || movie.rating === undefined)) {
+            const modelRating =
+                movie.report.executive_summary?.overall_film_rating ??
+                movie.report.raw_ml_predictions?.predicted_commercial_score ??
+                null;
+            if (typeof modelRating === 'number') {
+                movie.rating = Number(modelRating.toFixed(1));
+                await uploadFilm.findByIdAndUpdate(id, { rating: movie.rating });
+            }
+        }
+
         return res.status(200).json({ filmFound: true, film: movie });
     } catch (error) {
         return res.status(500).json({ message: 'Unable to retrieve movie' });
@@ -34,6 +47,28 @@ async function deleteMovie(req, res) {
 async function getAllMovies(req, res) {
     try {
         const movies = await uploadFilm.find().sort({ createdAt: -1 });
+
+        // Auto-backfill rating for any completed film that has a report but no rating yet
+        const backfillOps = movies
+            .filter(m => m.report && (m.rating === null || m.rating === undefined))
+            .map(m => {
+                const modelRating =
+                    m.report.executive_summary?.overall_film_rating ??
+                    m.report.raw_ml_predictions?.predicted_commercial_score ??
+                    null;
+                if (typeof modelRating === 'number') {
+                    return uploadFilm.findByIdAndUpdate(m._id, {
+                        rating: Number(modelRating.toFixed(1))
+                    }).then(() => { m.rating = Number(modelRating.toFixed(1)); });
+                }
+                return null;
+            })
+            .filter(Boolean);
+
+        if (backfillOps.length > 0) {
+            await Promise.all(backfillOps);
+        }
+
         return res.status(200).json({ allMovies: true, movies });
     } catch (error) {
         return res.status(500).json({ message: 'Unable to retrieve movies' });
@@ -83,6 +118,19 @@ async function getFilmReport(req, res) {
                 status: false,
                 message: 'Report not found or analysis failed to produce report data.'
             });
+        }
+
+        // Auto-backfill rating field for films completed before the rating field was added
+        if (movie.rating === null || movie.rating === undefined) {
+            const modelRating =
+                movie.report.executive_summary?.overall_film_rating ??
+                movie.report.raw_ml_predictions?.predicted_commercial_score ??
+                null;
+            if (typeof modelRating === 'number') {
+                await uploadFilm.findByIdAndUpdate(id, {
+                    rating: Number(modelRating.toFixed(1))
+                });
+            }
         }
 
         return res.status(200).json({

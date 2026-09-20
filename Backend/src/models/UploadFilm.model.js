@@ -150,6 +150,11 @@ const uploadFilmSchema = new mongoose.Schema({
         default: null
     },
 
+    rating: {
+        type: Number,
+        default: null
+    },
+
     timings: {
         type: mongoose.Schema.Types.Mixed,
         default: {}

@@ -153,14 +153,20 @@ class MLPipelineService {
                 if (code === 0 && reportJsonStr.trim()) {
                     try {
                         const parsedReport = JSON.parse(reportJsonStr.trim());
+                        const modelRating =
+                            parsedReport.executive_summary?.overall_film_rating ??
+                            parsedReport.raw_ml_predictions?.predicted_commercial_score ??
+                            null;
+
                         await UploadFilmModel.findByIdAndUpdate(filmId, {
                             processingStatus: 'COMPLETED',
                             analysisProgress: 100,
                             ragReady: true,
                             report: parsedReport,
+                            rating: typeof modelRating === 'number' ? Number(modelRating.toFixed(1)) : null,
                             timings: parsedReport.timings || {}
                         });
-                        console.log(`[MLPipelineService] Successfully completed and saved report for Film ID: ${filmId}`);
+                        console.log(`[MLPipelineService] Successfully completed and saved report for Film ID: ${filmId} (Rating: ${modelRating})`);
                     } catch (parseErr) {
                         console.error(`[MLPipelineService] JSON parsing error for report:`, parseErr);
                         await UploadFilmModel.findByIdAndUpdate(filmId, {

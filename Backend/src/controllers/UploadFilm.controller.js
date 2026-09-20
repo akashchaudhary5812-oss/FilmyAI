@@ -87,7 +87,9 @@ async function uploadFilm(req, res) {
                 s3Bucket = s3Result.s3Bucket;
                 s3Key = s3Result.s3Key;
                 s3ObjectUrl = s3Result.s3ObjectUrl;
-                filmMediaUrl = s3Result.presignedUrl || s3Result.s3ObjectUrl;
+                // Store permanent S3 URL (not presigned — presigned URLs expire after 24h
+                // and would make the film appear "deleted" from the website)
+                filmMediaUrl = s3Result.s3ObjectUrl;
 
                 console.log(`[UploadFilm] ✅ S3 video upload verified: ${s3ObjectUrl}`);
             } catch (s3Err) {
@@ -129,7 +131,8 @@ async function uploadFilm(req, res) {
                     fileSize: bannerFile.size,
                     metadata: { filmId: filmObjectId.toString(), type: 'banner' }
                 });
-                bannerImageUrl = s3BannerResult.presignedUrl || s3BannerResult.s3ObjectUrl;
+                // Store permanent S3 URL (not presigned — presigned URLs expire after 24h)
+                bannerImageUrl = s3BannerResult.s3ObjectUrl;
             } catch (s3Err) {
                 bannerImageUrl = `/uploads/banners/${path.basename(localBannerPath)}`;
             }
@@ -197,7 +200,7 @@ async function uploadFilm(req, res) {
                             type: 'cast_reference'
                         }
                     });
-                    castImageUrl = s3CastResult.presignedUrl || s3CastResult.s3ObjectUrl;
+                    castImageUrl = s3CastResult.s3ObjectUrl; // permanent URL, not presigned
                 } catch (s3Err) {
                     castImageUrl = `/uploads/cast/${path.basename(localActorImagePath)}`;
                 }
