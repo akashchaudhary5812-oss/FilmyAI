@@ -2,7 +2,7 @@
 Input Request Schema for FilmyAI Final Report Pipeline.
 Supports both camelCase/PascalCase (from Node Backend) and snake_case inputs.
 """
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict, Any
 from pydantic import BaseModel, Field, field_validator, ConfigDict
 
 
