@@ -27,6 +27,7 @@ export interface CastMemberUploadInput {
 export interface BackendMovieDoc {
   _id: string;
   uploadFilm: string;
+  streamUrl?: string;
   bannerImage?: string | null;
   CastImage?: string | null;
   castMembers?: CastMember[];
@@ -58,6 +59,7 @@ export interface Movie {
   backdropUrl: string;
   bannerUrl?: string;
   videoUrl?: string;
+  streamUrl?: string;
   director: string;
   productionHouses: string[];
   casting: string;

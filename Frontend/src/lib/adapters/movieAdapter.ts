@@ -27,6 +27,20 @@ export function extractModelRating(doc: BackendMovieDoc): number | undefined {
   return undefined;
 }
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
+
+function resolveMediaUrl(url?: string | null): string {
+  if (!url || typeof url !== "string") return "";
+  const trimmed = url.trim();
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("blob:") || trimmed.startsWith("data:")) {
+    return trimmed;
+  }
+  if (trimmed.startsWith("/")) {
+    return `${API_BASE_URL}${trimmed}`;
+  }
+  return `${API_BASE_URL}/${trimmed}`;
+}
+
 /**
  * Transforms a raw Backend Movie Document from MongoDB into a clean frontend Movie model.
  */
@@ -38,8 +52,9 @@ export function mapBackendMovieToMovie(doc: BackendMovieDoc): Movie {
     : [];
 
   // Use the uploaded banner image URL as the poster/backdrop if available, else mediaUrl
-  const mediaUrl = doc.uploadFilm || "";
-  const bannerUrl = doc.bannerImage || mediaUrl;
+  const mediaUrl = resolveMediaUrl(doc.uploadFilm);
+  const bannerUrl = doc.bannerImage ? resolveMediaUrl(doc.bannerImage) : mediaUrl;
+  const streamUrl = doc.streamUrl ? resolveMediaUrl(doc.streamUrl) : undefined;
 
   return {
     id: doc._id,
@@ -48,6 +63,7 @@ export function mapBackendMovieToMovie(doc: BackendMovieDoc): Movie {
     backdropUrl: bannerUrl,
     bannerUrl: bannerUrl,
     videoUrl: mediaUrl,
+    streamUrl: streamUrl,
     director: doc.DirectorName || "Unknown Director",
     productionHouses: prodHouses,
     casting: doc.Casting || "Not listed",

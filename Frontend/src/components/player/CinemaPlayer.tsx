@@ -86,19 +86,36 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
   // Watch progress hook
   const { currentProgress, saveProgress } = useWatchProgress(movie.id);
 
-  // Determine initial video source
-  const isDirectVideo =
-    typeof movie.videoUrl === "string" &&
-    (/\.(mp4|webm|mov|mkv|m4v)$/i.test(movie.videoUrl.split("?")[0]) ||
-      movie.videoUrl.includes("/uploads/videos/"));
-
-  const [activeStreamUrl, setActiveStreamUrl] = useState<string>(() => {
-    if (isDirectVideo && movie.videoUrl) return movie.videoUrl;
-    // Default to Tears of Steel cinematic sample if image or no video
+  // Helper to determine the best initial stream URL for this movie
+  const getPlayableStream = useCallback((film: Movie): string => {
+    // 1. Check direct videoUrl (presigned S3 URL or direct media link)
+    if (film.videoUrl && typeof film.videoUrl === "string") {
+      const url = film.videoUrl.trim();
+      const isHttp = url.startsWith("http://") || url.startsWith("https://") || url.startsWith("blob:");
+      const isDirectExt = /\.(mp4|webm|mov|mkv|m4v)(\?.*)?$/i.test(url);
+      const isMediaLocation = url.includes("amazonaws.com") || url.includes("/uploads/videos/") || url.includes("/stream");
+      if (isHttp && (isDirectExt || isMediaLocation)) {
+        return url;
+      }
+    }
+    // 2. Check streamUrl endpoint
+    if (film.streamUrl && typeof film.streamUrl === "string") {
+      return film.streamUrl;
+    }
+    // 3. Default to authentic studio cinematic sample stream
     return DEMO_STREAMS[0].url;
-  });
+  }, []);
 
-  const isDemoFallback = activeStreamUrl !== movie.videoUrl;
+  const [activeStreamUrl, setActiveStreamUrl] = useState<string>(() => getPlayableStream(movie));
+  const [streamErrorNotice, setStreamErrorNotice] = useState<string | null>(null);
+
+  // Synchronize stream URL when movie data loads or updates
+  useEffect(() => {
+    const stream = getPlayableStream(movie);
+    setActiveStreamUrl(stream);
+  }, [movie, getPlayableStream]);
+
+  const isDemoFallback = activeStreamUrl !== movie.videoUrl && activeStreamUrl !== movie.streamUrl;
 
   // Player States
   const [isPlaying, setIsPlaying] = useState(false);
@@ -111,6 +128,7 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [isBuffering, setIsBuffering] = useState(false);
+  const [hasStartedPlaying, setHasStartedPlaying] = useState(false);
 
   // Modals & Panels
   const [isXRayOpen, setIsXRayOpen] = useState(false);
@@ -150,6 +168,25 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
     }
   }, [currentProgress]);
 
+  // Autoplay attempt on mount & when activeStreamUrl changes
+  useEffect(() => {
+    if (!videoRef.current) return;
+    const playPromise = videoRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setIsPlaying(true);
+          setHasStartedPlaying(true);
+        })
+        .catch((err) => {
+          // Autoplay policy prevented autoplay with audio or unmuted
+          console.log("[CinemaPlayer] Autoplay waiting for user interaction:", err.message);
+          setIsPlaying(false);
+          setShowControls(true);
+        });
+    }
+  }, [activeStreamUrl]);
+
   // Wake up HUD and set auto-hide timer
   const handleUserActivity = useCallback(() => {
     setShowControls(true);
@@ -182,6 +219,7 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
     if (videoRef.current.paused) {
       videoRef.current.play().catch(console.error);
       setIsPlaying(true);
+      setHasStartedPlaying(true);
       triggerCenterRipple("play");
     } else {
       videoRef.current.pause();
@@ -403,9 +441,19 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
     }
   };
 
-  const onLoadedMetadata = () => {
-    if (!videoRef.current) return;
-    setDuration(videoRef.current.duration || 0);
+  const updateDuration = () => {
+    if (videoRef.current && !isNaN(videoRef.current.duration) && videoRef.current.duration > 0) {
+      setDuration(videoRef.current.duration);
+    }
+  };
+
+  const handleVideoError = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+    console.warn(`[CinemaPlayer] Video playback error on ${activeStreamUrl}:`, e);
+    if (activeStreamUrl !== DEMO_STREAMS[0].url) {
+      setStreamErrorNotice("Original media stream requires fallback. Connected to Studio 4K Stream.");
+      setActiveStreamUrl(DEMO_STREAMS[0].url);
+      setTimeout(() => setStreamErrorNotice(null), 6000);
+    }
   };
 
   const onEnded = () => {
@@ -464,17 +512,51 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
         className="w-full h-full object-contain"
         onTimeUpdate={onTimeUpdate}
         onProgress={onProgress}
-        onLoadedMetadata={onLoadedMetadata}
+        onLoadedMetadata={updateDuration}
+        onDurationChange={updateDuration}
+        onCanPlay={updateDuration}
+        onLoadedData={updateDuration}
         onWaiting={() => setIsBuffering(true)}
         onPlaying={() => {
           setIsBuffering(false);
           setIsPlaying(true);
+          setHasStartedPlaying(true);
         }}
         onPause={() => setIsPlaying(false)}
         onEnded={onEnded}
+        onError={handleVideoError}
         onClick={togglePlay}
         playsInline
+        preload="auto"
       />
+
+      {/* Stream fallback notice banner */}
+      {streamErrorNotice && (
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 bg-amber-950/90 border border-amber-500/40 backdrop-blur-xl px-5 py-2.5 rounded-2xl shadow-2xl flex items-center gap-3 text-xs text-amber-200 animate-slideDown">
+          <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+          <span>{streamErrorNotice}</span>
+        </div>
+      )}
+
+      {/* Initial Center Click-to-Play Overlay if autoplay is awaiting click */}
+      {!isPlaying && !hasStartedPlaying && (
+        <div 
+          onClick={togglePlay}
+          className="absolute inset-0 z-20 bg-black/40 backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer transition-all duration-300 hover:bg-black/30 group"
+        >
+          <div className="w-24 h-24 rounded-full bg-netflix-500/90 group-hover:bg-netflix-500 group-hover:scale-110 shadow-2xl shadow-netflix-500/50 flex items-center justify-center text-white transition-all duration-300 border-2 border-white/20 mb-4">
+            <Play className="w-12 h-12 fill-white ml-2" />
+          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-white font-display tracking-wide drop-shadow-lg">
+            {movie.title}
+          </h2>
+          <p className="text-xs text-slate-300 font-medium mt-1 flex items-center gap-2">
+            <span>Click to start cinema playback</span>
+            <span>•</span>
+            <span className="font-mono text-gold-400">{movie.genre}</span>
+          </p>
+        </div>
+      )}
 
       {/* Subtitles Overlay (Netflix Yellow / White drop shadow font) */}
       {currentSubtitleText && (
@@ -674,7 +756,7 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
                 <div className="px-2 py-1 text-[10px] font-mono uppercase text-slate-400 border-b border-white/10 mb-1">
                   Playback Stream Sources
                 </div>
-                {movie.videoUrl && isDirectVideo && (
+                {movie.videoUrl && (
                   <button
                     onClick={() => {
                       setActiveStreamUrl(movie.videoUrl!);
@@ -686,8 +768,24 @@ export function CinemaPlayer({ movie, allMovies = [] }: CinemaPlayerProps) {
                         : "text-slate-300 hover:bg-white/10"
                     }`}
                   >
-                    <span>Original Upload File</span>
+                    <span>Original Upload Media</span>
                     {activeStreamUrl === movie.videoUrl && <Check className="w-3.5 h-3.5 text-netflix-400" />}
+                  </button>
+                )}
+                {movie.streamUrl && (
+                  <button
+                    onClick={() => {
+                      setActiveStreamUrl(movie.streamUrl!);
+                      setIsStreamSelectorOpen(false);
+                    }}
+                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors ${
+                      activeStreamUrl === movie.streamUrl
+                        ? "bg-cyan-500/20 text-cyan-400 font-bold"
+                        : "text-slate-300 hover:bg-white/10"
+                    }`}
+                  >
+                    <span>Direct Server Stream</span>
+                    {activeStreamUrl === movie.streamUrl && <Check className="w-3.5 h-3.5 text-cyan-400" />}
                   </button>
                 )}
                 {DEMO_STREAMS.map((demo) => (

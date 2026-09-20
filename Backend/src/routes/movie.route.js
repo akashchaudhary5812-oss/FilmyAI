@@ -3,6 +3,8 @@ const router = express.Router();
 const movieController = require('../controllers/movie.controller');
 
 router.get('/movie/:id', movieController.watchMovie);
+router.get('/movie/:id/stream', movieController.streamMovie);
+router.get('/film/:id/stream', movieController.streamMovie);
 router.delete('/movie/:id', movieController.deleteMovie);
 router.get('/All_movies', movieController.getAllMovies);
 
