@@ -1,10 +1,12 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
 
 /**
- * Base API URL configured via NEXT_PUBLIC_API_BASE_URL with safe fallback to http://localhost:3000
+ * Base API URL configured via NEXT_PUBLIC_API_URL or NEXT_PUBLIC_API_BASE_URL
  */
 const API_BASE_URL = (
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000"
+  process.env.NEXT_PUBLIC_API_URL ||
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  "http://54.85.9.27"
 ).trim();
 
 export const apiClient: AxiosInstance = axios.create({

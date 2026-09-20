@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
     // 1. Try calling the Python RAG Microservice (POST /api/v1/rag/query)
     const reportApiBase = (
       process.env.NEXT_PUBLIC_REPORT_API_BASE_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       "http://127.0.0.1:8000"
     ).replace(/\/$/, "");
