@@ -94,6 +94,11 @@ export const filmApi = {
           headers: {
             "Content-Type": "multipart/form-data",
           },
+          // No timeout for file uploads — large film files (GBs) can take many
+          // minutes to stream to S3. The default 60s global timeout would cut
+          // the connection and show "Unable to reach Filmy AI servers" even
+          // though the backend is still running fine.
+          timeout: 0,
           onUploadProgress: (progressEvent) => {
             if (progressEvent.total && onProgress) {
               const percent = Math.round(
