@@ -124,6 +124,10 @@ Platforms such as **BookMyShow and District** could use FilmyAI insights to:
                     ▼
           Film-Specific Q&A
 
+
+
+
+```
 🔬 Core AI Modules
 1. ML — Commercial Intelligence
 
@@ -514,52 +518,4 @@ Cloud-native asynchronous ML job queues
 Production-scale model serving
 🎓 Project Context
 
-FilmyAI was developed as a B.Tech Computer Science Engineering major project with the objective of exploring how modern AI technologies can be combined into an end-to-end intelligent media analysis system.
-
-The project integrates:
-
-Full-stack development
-Machine Learning
-Computer Vision
-Natural Language Processing
-LLMs
-RAG
-Cloud Infrastructure
-AI-powered reporting
-👨‍💻 Team
-Team Leader
-
-Akash Chaudhary
-
-Contributions:
-
-Backend Development
-Machine Learning
-ML_VIDEO
-LLM_FINAL_REPORT
-RAG
-System Architecture
-AI Pipeline Integration
-Cloud Integration
-Team Member
-
-Frontend Developer
-
-Contribution:
-
-Next.js frontend
-UI/UX implementation
-Film upload interface
-Film listing and details pages
-Analysis status interface
-Report visualization
-Backend API integration
-📜 License
-
-This project is developed for academic and research purposes.
-
-Add your preferred license here before distributing the project publicly.
-
-⭐ Vision
-
-FilmyAI aims to build a future where films are not evaluated only through ratings and reviews, but through multi-dimensional AI-powered film intelligence.
+FilmyAI was developed as a B.Tech Computer Science Engineering major project with the objective of exploring how modern AI technologies can be combined into an end-to-end intelligent media 
