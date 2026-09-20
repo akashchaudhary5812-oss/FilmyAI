@@ -220,3 +220,5 @@ service-account.json
 .DS_Store
 *.bak
 *.orig
+
+/run_drishyam2_local.py
